@@ -1,0 +1,72 @@
+<div class="container mt-4">
+  <h2>Alkalmazottak</h2>
+
+  <!-- Új alkalmazott -->
+  <div class="card p-3 mb-4">
+    <h5>Új alkalmazott</h5>
+    <div class="row g-2">
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Név" [(ngModel)]="newEmployee().name">
+      </div>
+      <div class="col-md-2">
+        <input type="email" class="form-control" placeholder="Email" [(ngModel)]="newEmployee().email">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Telefon" [(ngModel)]="newEmployee().telNum">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Beosztás" [(ngModel)]="newEmployee().title">
+      </div>
+      <div class="col-md-2">
+        <input type="number" class="form-control" placeholder="Cég ID" [(ngModel)]="newEmployee().ownerCompanyId">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100" (click)="addEmployee()">Hozzáadás</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista -->
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Név</th>
+      <th>Email</th>
+      <th>Telefon</th>
+      <th>Beosztás</th>
+      <th>Cég ID</th>
+      <th>Műveletek</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (emp of employees(); track emp.id) {
+        <tr>
+          @if (editingEmployee() && editingEmployee()?.id === emp.id) {
+            <td>{{ emp.id }}</td>
+            <td><input type="text" class="form-control" [(ngModel)]="editingEmployee()!.name"></td>
+            <td><input type="email" class="form-control" [(ngModel)]="editingEmployee()!.email"></td>
+            <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.telNum"></td>
+            <td><input type="text" class="form-control" [(ngModel)]="editingEmployee()!.title"></td>
+            <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.ownerCompanyId"></td>
+            <td>
+              <button class="btn btn-primary btn-sm me-2" (click)="saveEdit()">Mentés</button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
+            </td>
+          } @else {
+            <td>{{ emp.id }}</td>
+            <td>{{ emp.name }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.telNum }}</td>
+            <td>{{ emp.title }}</td>
+            <td>{{ emp.ownerCompanyId }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="editEmployee(emp)">Szerkesztés</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteEmployee(emp.id!)">Törlés</button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,1126 @@
+openapi: 3.0.3
+info:
+  title: Service Support API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+security:
+  - bearerAuth: [ ]
+
+paths:
+  /api/health:
+    get:
+      summary: Egyszerű elérhetőségi teszt
+      operationId: healthCheck
+      tags: [ Health ]
+      security: [ ] # publikus
+      responses:
+        '200':
+          description: OK válasz
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /users:
+    get:
+      tags:
+        - user
+      summary: Összes felhasználó lekérdezése
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Sikeres válasz
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Hiányzó vagy hibás token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '403':
+          description: Jogosultság hiányzik
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Forbidden"
+
+  /users/register:
+    post:
+      tags: [ user ]
+      summary: Új felhasználó regisztrációja
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: Sikeres regisztráció
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}/ban:
+    post:
+      tags: [ user ]
+      summary: Felhasználó kitiltása
+      operationId: banUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sikeres tiltás
+
+  /users/{id}/unban:
+    post:
+      tags: [ user ]
+      summary: Felhasználó tiltásának feloldása
+      operationId: unbanUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sikeres feloldás
+
+  /users/{id}/password:
+    patch:
+      tags: [ user ]
+      summary: Jelszó megváltoztatása a régi jelszó megadásával
+      operationId: changePassword
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ oldPassword, newPassword ]
+              properties:
+                oldPassword:
+                  type: string
+                  format: password
+                newPassword:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Sikeres jelszócsere
+        '400':
+          description: Hibás adatok vagy jelszó nem egyezik
+
+  /users/password-with-token:
+    patch:
+      tags: [ user ]
+      summary: Jelszó megváltoztatása reset tokennel (email alapján)
+      operationId: changePasswordWithToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ email, token, newPassword ]
+              properties:
+                email:
+                  type: string
+                  format: email
+                token:
+                  type: string
+                newPassword:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Sikeres jelszócsere
+        '400':
+          description: Hibás vagy lejárt token
+
+
+  /users/{id}/set-password:
+    patch:
+      tags: [ user ]
+      summary: Admin által jelszó beállítása
+      operationId: setPassword
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ password ]
+              properties:
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Jelszó frissítve
+
+  /users/{id}/roles/{roleName}:
+    post:
+      tags: [ user ]
+      summary: Role hozzárendelése felhasználóhoz
+      operationId: assignRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sikeres role-hozzárendelés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      tags: [ user ]
+      summary: Role eltávolítása felhasználótól
+      operationId: removeRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sikeres role-eltávolítás
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/forgot-password:
+    post:
+      tags: [ user ]
+      summary: Elfelejtett jelszó – token létrehozása
+      operationId: forgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ email ]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Token generálva vagy meglévő visszaadva
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  validUntil:
+                    type: string
+                    format: date-time
+
+  /me:
+    get:
+      tags:
+        - user
+      summary: Visszaadja a bejelentkezett felhasználó adatait és szerepköreit
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: A bejelentkezett user adatai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeResponse'
+        '401':
+          description: Nincs bejelentkezve vagy érvénytelen token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Nincs bejelentkezve"
+
+  /login:
+    post:
+      tags:
+        - auth
+      summary: Bejelentkezés email + jelszó párossal
+      operationId: login
+      security: [ ] # publikus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Sikeres bejelentkezés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Hibás bejelentkezés
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Login failed: Bad credentials"
+  /companies:
+    get:
+      tags:
+        - company
+      summary: Listázza az összes céget
+      operationId: getAllCompanies
+      responses:
+        '200':
+          description: A cégek listája
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+    post:
+      tags:
+        - company
+      summary: Új cég létrehozása
+      operationId: createCompany
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '200':
+          description: A létrehozott cég
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+
+  /companies/{id}:
+    get:
+      tags:
+        - company
+      summary: Cég lekérése ID alapján
+      operationId: getCompanyById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: A kért cég adatai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '404':
+          description: Nem található
+    put:
+      tags:
+        - company
+      summary: Cég frissítése ID alapján
+      operationId: updateCompany
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '200':
+          description: A frissített cég
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '404':
+          description: Nem található
+    delete:
+      tags:
+        - company
+      summary: Cég törlése ID alapján
+      operationId: deleteCompany
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Sikeresen törölve
+        '404':
+          description: Nem található
+
+  /companies/search/by-name:
+    get:
+      tags:
+        - company
+      summary: Cégek keresése név alapján (LIKE %name%)
+      operationId: findCompaniesByName
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: A névrészlet, amire keresünk
+      responses:
+        '200':
+          description: A találatok listája
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+
+  /owner-companies:
+    get:
+      tags:
+        - owner_company
+      summary: Get all owner companies
+      responses:
+        '200':
+          description: List of companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OwnerCompany'
+    post:
+      tags:
+        - owner_company
+      summary: Create a new owner company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerCompany'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompany'
+
+  /owner-companies/{id}:
+    get:
+      tags:
+        - owner_company
+      summary: Get owner company by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Company found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompany'
+        '404':
+          description: Not found
+    put:
+      tags:
+        - owner_company
+      summary: Update owner company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerCompany'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompany'
+    delete:
+      tags:
+        - owner_company
+      summary: Delete owner company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+
+
+  /owner-company-employees:
+    get:
+      tags:
+        - owner_company_employee
+      summary: Get all employees
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OwnerCompanyEmployee'
+    post:
+      tags:
+        - owner_company_employee
+      summary: Create new employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerCompanyEmployee'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompanyEmployee'
+
+  /owner-company-employees/{id}:
+    get:
+      tags:
+        - owner_company_employee
+      summary: Get employee by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Employee found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompanyEmployee'
+        '404':
+          description: Not found
+    put:
+      tags:
+        - owner_company_employee
+      summary: Update employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerCompanyEmployee'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerCompanyEmployee'
+    delete:
+      tags:
+        - owner_company_employee
+      summary: Delete employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+
+  /defects:
+    get:
+      tags: [ defect ]
+      summary: Get all defects
+      responses:
+        '200':
+          description: List of defects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Defect'
+    post:
+      tags: [ defect ]
+      summary: Create new defect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Defect'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Defect'
+
+  /defects/{id}:
+    get:
+      tags: [ defect ]
+      summary: Get defect by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Defect found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Defect'
+        '404':
+          description: Not found
+    put:
+      tags: [ defect ]
+      summary: Update defect
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Defect'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Defect'
+    delete:
+      tags: [ defect ]
+      summary: Delete defect
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+
+  /tools:
+    get:
+      tags: [ tool ]
+      summary: Get all tools
+      responses:
+        '200':
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tool'
+    post:
+      tags: [ tool ]
+      summary: Create new tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tool'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+
+  /tools/{id}:
+    get:
+      tags: [ tool ]
+      summary: Get tool by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tool found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+        '404':
+          description: Not found
+    put:
+      tags: [ tool ]
+      summary: Update tool
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tool'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+    delete:
+      tags: [ tool ]
+      summary: Delete tool
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+
+  /spare-parts:
+    get:
+      tags: [ spare_part ]
+      summary: List or search spare parts
+      parameters:
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+          description: If provided, filters spare parts by partial name match
+      responses:
+        '200':
+          description: List of spare parts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SparePart'
+    post:
+      tags: [ spare_part ]
+      summary: Create a new spare part
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SparePart'
+      responses:
+        '201':
+          description: Spare part created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparePart'
+
+  /spare-parts/{id}:
+    get:
+      tags: [ spare_part ]
+      summary: Get spare part by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Spare part found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparePart'
+        '404':
+          description: Not found
+    put:
+      tags: [ spare_part ]
+      summary: Update spare part
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SparePart'
+      responses:
+        '200':
+          description: Spare part updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SparePart'
+    delete:
+      tags: [ spare_part ]
+      summary: Delete spare part
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Spare part deleted
+        '404':
+          description: Not found
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    SparePartUsage:
+      type: object
+      properties:
+        sparePart:
+          $ref: '#/components/schemas/SparePart'
+        quantity:
+          type: integer
+
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+
+    RegisterUserRequest:
+      type: object
+      required:
+        - email
+        - password
+        - fullName
+      properties:
+        fullName:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        position:
+          type: string
+    Tool:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        tool_id:
+          type: string
+          example: 2025-10
+        itemNumber:
+          type: string
+          example: "ITM-001"
+        name:
+          type: string
+          example: "Fúrógép"
+        serialNumber:
+          type: string
+          example: "SN-2025-0001"
+        typeNumber:
+          type: string
+          example: "TYP-1234"
+        ownerName:
+          type: string
+          description: Az ügyfél neve (owner_company_employee.name)
+          example: "Kiss János"
+        ownerCompanyName:
+          type: string
+          description: Az ügyfél cégének neve (ha van, különben üresen marad)
+          example: "Szerszám Kuckó Kft."
+    SparePart:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        itemName:
+          type: string
+          example: "Csapágy 6203"
+        itemNumber:
+          type: string
+          example: "BRG-6203"
+        nettoBuyingPrice:
+          type: integer
+          example: 1200
+        nettoSellingPrice:
+          type: integer
+          example: 1800
+    Defect:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Bearing failure"
+    OwnerCompanyEmployee:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        name:
+          type: string
+          example: "John Doe"
+        telNum:
+          type: string
+          example: 361234567
+        title:
+          type: string
+          example: "Software Engineer"
+        ownerCompanyId:
+          type: integer
+          example: 10
+    OwnerCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+        accountNumber:
+          type: string
+        name:
+          type: string
+        postalCode:
+          type: integer
+        street:
+          type: string
+        taxNumber:
+          type: string
+        town:
+          type: string
+    Company:
+      type: object
+      required:
+        - name
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "Teszt Kft."
+        postalCode:
+          type: integer
+          example: 1111
+        status:
+          type: boolean
+          example: true
+        street:
+          type: string
+          example: "Fő utca 1."
+        taxNumber:
+          type: string
+          example: "12345678-1-12"
+        town:
+          type: string
+          example: "Budapest"
+    User:
+      type: object
+      required: [ id, email, fullName ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        phoneNumber:
+          type: string
+          example: "+36123456789"
+        position:
+          type: string
+          example: "Rendszergazda"
+        enabled:
+          type: boolean
+        roles:
+          type: array
+          items:
+            type: string
+          example: [ "ROLE_ADMIN", "ROLE_USER" ]
+
+    LoginRequest:
+      type: object
+      required: [ email, password ]
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    MeResponse:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@example.com
+        fullName:
+          type: string
+          example: Admin Felhasználó
+        roles:
+          type: array
+          items:
+            type: string
+          example: [ "ROLE_ADMIN", "ROLE_USER" ]

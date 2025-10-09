@@ -1,0 +1,39 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+    <div class="card-header bg-primary text-white text-center">
+      <h4 class="mb-0">Bejelentkezés</h4>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="onLogin()">
+        <div class="mb-3">
+          <label for="email" class="form-label">E-mail cím</label>
+          <input
+            type="email"
+            id="email"
+            name="username"
+            class="form-control"
+            [(ngModel)]="username"
+            required
+            placeholder="E-mail címed"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Jelszó</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            [(ngModel)]="password"
+            required
+            placeholder="Jelszavad"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Belépés</button>
+      </form>
+
+    </div>
+  </div>
+</div>

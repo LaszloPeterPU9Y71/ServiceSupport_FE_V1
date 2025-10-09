@@ -1,0 +1,137 @@
+<nav style="display: flex; justify-content: center">
+  @if (!auth.isLoggedIn()) {
+    <button
+      class="btn"
+      routerLink="/login"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !login.isActive }"
+      #login="routerLinkActive"
+    >
+      Bejelentkezés
+    </button>
+
+    <button
+      class="btn"
+      routerLink="/reset-password"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !resetPassword.isActive }"
+      #resetPassword="routerLinkActive"
+    >
+      Elfelejtett jelszó
+    </button>
+  } @else {
+
+    <button
+      class="btn"
+      routerLink="/registration"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !registrationButton.isActive }"
+      #registrationButton="routerLinkActive"
+    >
+      Munkatárs hozzáadása
+    </button>
+
+
+    <button
+      class="btn"
+      routerLink="/owner-company-employee"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !ownerCompanyEmployee.isActive }"
+      #ownerCompanyEmployee="routerLinkActive"
+    >
+      Ügyfelek
+    </button>
+    <button
+      class="btn"
+      routerLink="/owner-company"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !ownerCompany.isActive }"
+      #ownerCompany="routerLinkActive"
+    >
+      Cégek
+    </button>
+
+    <button
+      class="btn"
+      routerLink="/defects"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !defects.isActive }"
+      #defects="routerLinkActive"
+    >
+      Hibák
+    </button>
+
+
+    <button
+      class="btn"
+      routerLink="/parts"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !parts.isActive }"
+      #parts="routerLinkActive"
+    >
+      Alkatrészek
+    </button>
+
+
+    <button
+      class="btn"
+      routerLink="/collagues"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !collagues.isActive }"
+      #collagues="routerLinkActive"
+    >
+      Munkatársak
+    </button>
+
+    <button
+      class="btn"
+      routerLink="/worksheet/new"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !new_worksheet.isActive }"
+      #new_worksheet="routerLinkActive"
+    >
+      Új munkalap
+    </button>
+
+    <button
+      class="btn"
+      routerLink="/tools"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !tools.isActive }"
+      #tools="routerLinkActive"
+    >
+      Gépnyilvántartás
+    </button>
+
+    <button
+      class="btn"
+      routerLink="/worksheet"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !worksheet.isActive }"
+      #worksheet="routerLinkActive"
+    >
+      Munkalapok
+    </button>
+
+    <button
+      class="btn btn-danger"
+      (click)="onLogout()"
+    >
+      Kilépés
+    </button>
+  }
+
+
+</nav>
+<router-outlet/>
