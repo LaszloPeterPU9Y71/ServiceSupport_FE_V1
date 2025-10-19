@@ -9,12 +9,8 @@
  */
 
 
-export interface OwnerCompanyEmployee { 
-    id?: number;
-    email?: string;
-    name?: string;
-    telNum?: string;
-    title?: string;
-    ownerCompanyName?: string;
+export interface WorksheetSaveRequestSparePartsInner { 
+    sparePartId: number;
+    quantity: number;
 }
 

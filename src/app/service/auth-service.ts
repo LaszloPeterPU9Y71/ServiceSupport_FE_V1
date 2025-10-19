@@ -86,7 +86,6 @@ export class AuthStateService {
           localStorage.setItem(this.POSITION_KEY, this.position()!.toString());
 
         }
-        console.log("Elér idáig4? ")
 
         this.router.navigate(['/home']);
       },

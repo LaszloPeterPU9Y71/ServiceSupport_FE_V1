@@ -10,7 +10,7 @@ import {AuthStateService} from './service/auth-service';
   standalone: true,
 })
 export class App {
-  protected readonly title = signal('ServiceSupport-FE');
+  protected readonly title = signal('ServiceSupport-FE-V1');
 
   auth = inject(AuthStateService);
 

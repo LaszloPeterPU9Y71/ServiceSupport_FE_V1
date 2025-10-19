@@ -9,12 +9,11 @@
  */
 
 
-export interface OwnerCompanyEmployee { 
-    id?: number;
-    email?: string;
-    name?: string;
-    telNum?: string;
-    title?: string;
-    ownerCompanyName?: string;
+export interface WorksheetNote { 
+    noteId?: number;
+    userId?: number;
+    noteText?: string;
+    userName?: string;
+    postedDate?: string;
 }
 

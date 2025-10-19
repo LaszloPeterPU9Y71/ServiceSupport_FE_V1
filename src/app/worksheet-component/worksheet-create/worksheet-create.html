@@ -1,0 +1,129 @@
+<!-- Gépkiválasztás -->
+<div class="mb-3">
+  <label class="form-label">Gép adatai</label>
+  <table class="table table-bordered align-middle mt-2">
+    <tbody>
+    <tr>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().name"
+               (ngModelChange)="updateField('name', $event)"
+               placeholder="Megnevezés">
+      </td>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().typeNumber"
+               (ngModelChange)="updateField('typeNumber', $event)"
+               placeholder="Típusszám">
+      </td>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().itemNumber"
+               (ngModelChange)="updateField('itemNumber', $event)"
+               placeholder="Cikkszám">
+      </td>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().serialNumber"
+               (ngModelChange)="updateField('serialNumber', $event)"
+               placeholder="Gyártási szám">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Tulajdonos adatai</label>
+  <table class="table table-bordered align-middle mt-2">
+    <tbody>
+    <tr>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().employee"
+               (ngModelChange)="updateField('employee', $event)"
+               placeholder="Alkalmazott, aki behozta a gépet">
+      </td>
+      <td>
+        <input type="text"
+               class="form-control"
+               [ngModel]="formData().companyName"
+               (ngModelChange)="updateField('companyName', $event)"
+               placeholder="Cégnév">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Hibajelenség -->
+<div class="mb-3">
+  <label class="form-label">Hibajelenség</label>
+  <select class="form-select"
+          [ngModel]="formData().errorType"
+          (ngModelChange)="updateField('errorType', $event)">
+    <option [ngValue]="null">Válassz hibajelenséget...</option>
+    <option value="nem_indul">Nem indul</option>
+    <option value="zajosan_mukodik">Zajosan működik</option>
+    <option value="tulmelegedes">Túlmelegedés</option>
+    <option value="hibas_meres">Hibás mérés</option>
+    <option value="mechanikai_serules">Mechanikai sérülés</option>
+    <option value="egyeb">Egyéb</option>
+  </select>
+</div>
+<!-- Hiba felvétel gomb -->
+<div class="mb-3 text-start">
+  <button type="button"
+          class="btn btn-primary"
+          (click)="addError()">
+    A hibafelvétel oldalra
+  </button>
+</div>
+
+
+<!-- Owner description -->
+<div class="mb-3">
+  <label class="form-label">Megjegyzés</label>
+  <textarea class="form-control"
+            [ngModel]="formData().ownerDescription"
+            (ngModelChange)="updateField('ownerDescription', $event)"></textarea>
+</div>
+
+<!-- Checkboxok -->
+<div class="form-check">
+  <input class="form-check-input" type="checkbox"
+         [checked]="formData().warranty"
+         (change)="updateField('warranty', $event.target.checked)">
+  <label class="form-check-label">Garanciális</label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" type="checkbox"
+         [checked]="formData().hasWarrantyCard"
+         (change)="updateField('hasWarrantyCard', $event.target.checked)">
+  <label class="form-check-label">Jótállási jegy</label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" type="checkbox"
+         [checked]="formData().hasInvoiceCopy"
+         (change)="updateField('hasInvoiceCopy', $event.target.checked)">
+  <label class="form-check-label">Számlamásolat</label>
+</div>
+
+<div class="form-check">
+  <input class="form-check-input" type="checkbox"
+         [checked]="formData().hasRegistrationProof"
+         (change)="updateField('hasRegistrationProof', $event.target.checked)">
+  <label class="form-check-label">Regisztrációs nyomtatvány</label>
+</div>
+
+
+
+<!-- Mentés -->
+<button class="btn btn-primary mt-3" (click)="createWorksheet()">Mentés</button>

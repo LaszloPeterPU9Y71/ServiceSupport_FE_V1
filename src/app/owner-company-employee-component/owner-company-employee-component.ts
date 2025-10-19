@@ -18,7 +18,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     email: '',
     telNum: '',
     title: '',
-    ownerCompanyId: undefined
+    ownerCompanyName: undefined
   });
   editingEmployee = signal<OwnerCompanyEmployee | null>(null);
 
@@ -37,14 +37,14 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     const raw = this.newEmployee();
     const emp = {
       ...raw,
-      ownerCompanyId: raw.ownerCompanyId !== undefined && raw.ownerCompanyId !== null
-        ? +raw.ownerCompanyId
+      ownerCompanyId: raw.ownerCompanyName !== undefined && raw.ownerCompanyName !== null
+        ? +raw.ownerCompanyName
         : undefined
     };
 
     this.employeeService.ownerCompanyEmployeesPost(emp).subscribe({
       next: () => {
-        this.newEmployee.set({name: '', email: '', telNum: '', title: '', ownerCompanyId: undefined});
+        this.newEmployee.set({name: '', email: '', telNum: '', title: '', ownerCompanyName: undefined});
         this.loadEmployees();
       },
       error: (err: any) => console.error('❌ Hiba új alkalmazott létrehozásakor:', err)
@@ -63,7 +63,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     const fixed: OwnerCompanyEmployee = {
       ...emp,
       telNum: emp.telNum ? emp.telNum : undefined,
-      ownerCompanyId: emp.ownerCompanyId ? +emp.ownerCompanyId : undefined
+      ownerCompanyName: emp.ownerCompanyName ? emp.ownerCompanyName : undefined
     };
 
     this.employeeService.ownerCompanyEmployeesIdPut(emp.id, fixed).subscribe({

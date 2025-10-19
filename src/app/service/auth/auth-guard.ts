@@ -19,12 +19,12 @@ export function roleGuard(roles?: string[], options?: RoleGuardOptions): CanActi
 
     const loggedIn = auth.isLoggedIn();
 
-    // ⛔ Csak kijelentkezett felhasználóknak szabad ide jönni
+ /*   // ⛔ Csak kijelentkezett felhasználóknak szabad ide jönni
     if (options?.onlyWhenLoggedOut && loggedIn) {
       router.navigate(['/home']);
       alert("Be vagy jelentkezve")
       return false;
-    }
+    }*/
 
     // ⛔ Bejelentkezés szükséges
     if (!loggedIn && !options?.onlyWhenLoggedOut) {
@@ -37,12 +37,12 @@ export function roleGuard(roles?: string[], options?: RoleGuardOptions): CanActi
       const userRoles = auth.roles();
       const common = roles.filter(role => userRoles.includes(role));
 
-      console.log('🔑 Kellene:', roles);
-      console.log('👤 Van:', userRoles);
+      console.log('🔑 Szükséges:', roles);
+      console.log('👤 Jelenlegi:', userRoles);
       console.log('✅ Közös:', common);
 
       if (common.length === 0) {
-        console.warn('⛔ Nincs megfelelő jogosultság, átirányítás home-ra');
+        console.warn('⛔ Nincs megfelelő jogosultság, átirányítás kezdőoldalra-ra');
         router.navigate(['/home']);
         return false;
       }

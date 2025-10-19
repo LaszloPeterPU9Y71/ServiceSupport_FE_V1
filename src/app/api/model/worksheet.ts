@@ -9,12 +9,13 @@
  */
 
 
-export interface OwnerCompanyEmployee { 
+export interface Worksheet { 
     id?: number;
-    email?: string;
-    name?: string;
-    telNum?: string;
-    title?: string;
-    ownerCompanyName?: string;
+    toolId: number;
+    isWarranty?: boolean;
+    hasWarrantyCard?: boolean;
+    hasInvoiceCopy?: boolean;
+    hasRegistrationProof?: boolean;
+    createdAt?: string;
 }
 

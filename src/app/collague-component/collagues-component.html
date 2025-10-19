@@ -1,0 +1,68 @@
+<div class="container mt-4">
+  <h2>Felhasználók</h2>
+
+  @if (loading()) {
+    <div class="alert alert-info mt-3">Betöltés folyamatban...</div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger mt-3">{{ error() }}</div>
+  }
+
+  @if (!loading() && !error()) {
+    <table class="table table-bordered table-striped mt-3">
+      <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Név</th>
+        <th>Email</th>
+        <th>Jogosultságok</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+
+              <div class="d-flex flex-wrap gap-2">
+                <label class="input-group-text" for="roleSelect{{ user.id }}">Jogosultságok:</label>
+                @for (role of user.roles; track role) {
+                  <span class="badge bg-primary">
+                    {{ role }}
+                    <button type="button"
+                            class="btn-close btn-close-white ms-2"
+                            (click)="removeRole(user, role)">
+                    </button>
+                  </span>
+                }
+              </div>
+
+              <div class="input-group mt-2 d-flex align-items-center gap-2">
+                <label class="input-group-text" for="roleSelect{{ user.id }}">Jogosultság hozzáadása:</label>
+
+                <select id="roleSelect{{ user.id }}"
+                        class="form-control"
+                        [(ngModel)]="newRole()[user.id!]"
+                        [ngModelOptions]="{standalone: true}">
+                  <option [ngValue]="null" disabled selected>Jogosultság kiválasztása</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Technician">Technician</option>
+                  <option value="Admin">Admin</option>
+                </select>
+
+                <button class="btn btn-success"
+                        type="button"
+                        (click)="addRole(user)">
+                  Hozzáadás
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

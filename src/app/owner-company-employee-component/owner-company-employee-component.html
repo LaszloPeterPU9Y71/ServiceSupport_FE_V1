@@ -18,7 +18,7 @@
         <input type="text" class="form-control" placeholder="Beosztás" [(ngModel)]="newEmployee().title">
       </div>
       <div class="col-md-2">
-        <input type="number" class="form-control" placeholder="Cég ID" [(ngModel)]="newEmployee().ownerCompanyId">
+        <input type="text" class="form-control" placeholder="Cégnév" [(ngModel)]="newEmployee().ownerCompanyName">
       </div>
       <div class="col-md-2">
         <button class="btn btn-success w-100" (click)="addEmployee()">Hozzáadás</button>
@@ -48,7 +48,7 @@
             <td><input type="email" class="form-control" [(ngModel)]="editingEmployee()!.email"></td>
             <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.telNum"></td>
             <td><input type="text" class="form-control" [(ngModel)]="editingEmployee()!.title"></td>
-            <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.ownerCompanyId"></td>
+            <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.ownerCompanyName"></td>
             <td>
               <button class="btn btn-primary btn-sm me-2" (click)="saveEdit()">Mentés</button>
               <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
@@ -59,7 +59,7 @@
             <td>{{ emp.email }}</td>
             <td>{{ emp.telNum }}</td>
             <td>{{ emp.title }}</td>
-            <td>{{ emp.ownerCompanyId }}</td>
+            <td>{{ emp.ownerCompanyName }}</td>
             <td>
               <button class="btn btn-warning btn-sm me-2" (click)="editEmployee(emp)">Szerkesztés</button>
               <button class="btn btn-danger btn-sm" (click)="deleteEmployee(emp.id!)">Törlés</button>

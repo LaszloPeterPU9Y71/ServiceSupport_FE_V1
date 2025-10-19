@@ -1,0 +1,52 @@
+<div class="container-fluid">
+
+  <!-- Eszközök táblázata -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle text-center">
+      <thead class="table-dark">
+      <tr>
+        <th>Azonosító</th>
+        <th>Megnevezés</th>
+        <th>Típusszám</th>
+        <th>Cikkszám</th>
+        <th>Sorszám</th>
+        <th>Behozta</th>
+        <th>Cég neve</th>
+      </tr>
+      <tr>
+        <th><input class="form-control" [ngModel]="filters()['tool_id']"
+                   (ngModelChange)="updateFilter('tool_id', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['ownerName']"
+                   (ngModelChange)="updateFilter('ownerName', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['ownerCompanyName']"
+                   (ngModelChange)="updateFilter('ownerCompanyName', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['name']" (ngModelChange)="updateFilter('name', $event)"
+                   placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['typeNumber']"
+                   (ngModelChange)="updateFilter('typeNumber', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['serialNumber']"
+                   (ngModelChange)="updateFilter('serialNumber', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['itemNumber']"
+                   (ngModelChange)="updateFilter('itemNumber', $event)" placeholder="Keresés..."/></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (tool of filteredTools(); track tool.tool_id) {
+          <tr>
+            <td>{{ tool.tool_id }}</td>
+            <td>{{ tool.name }}</td>
+            <td>{{ tool.typeNumber }}</td>
+            <td>{{ tool.itemNumber }}</td>
+            <td>{{ tool.serialNumber }}</td>
+            <td>{{ tool.ownerName }}</td>
+            <td>{{ tool.ownerCompanyName }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="9" class="text-muted text-center">Nincs találat</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

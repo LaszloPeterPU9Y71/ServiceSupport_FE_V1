@@ -803,6 +803,45 @@ paths:
         '404':
           description: Not found
 
+  /worksheet/{worksheetId}/assign/{userId}:
+    post:
+      tags: [ worksheet ]
+      summary: Assign a user to a tool
+      parameters:
+        - in: path
+          name: worksheetId
+          required: true
+          schema: { type: integer }
+        - in: path
+          name: userId
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Tool assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worksheet'
+
+  /worksheet/{worksheetId}/unassign:
+    post:
+      tags: [ worksheet ]
+      summary: Unassign the user from a tool
+      parameters:
+        - in: path
+          name: worksheetId
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Tool unassigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worksheet'
+
+
   /spare-parts:
     get:
       tags: [ spare_part ]
@@ -895,7 +934,211 @@ paths:
           description: Spare part deleted
         '404':
           description: Not found
+  /worksheets:
+    get:
+      tags: [ worksheet ]
+      summary: Összes munkalap lekérdezése
+      operationId: getAllWorksheets
+      responses:
+        '200':
+          description: Munkalapok listája
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Worksheet'
 
+    post:
+      tags: [ worksheet ]
+      summary: Új munkalap létrehozása
+      operationId: createWorksheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorksheetCreateRequest'
+      responses:
+        '201':
+          description: Létrehozott munkalap
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worksheet'
+
+  /worksheets/{id}:
+    get:
+      tags: [ worksheet ]
+      summary: Munkalap lekérése ID alapján
+      operationId: getWorksheetById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A kért munkalap
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worksheet'
+        '404':
+          description: Nem található
+
+    delete:
+      tags: [ worksheet ]
+      summary: Munkalap törlése
+      operationId: deleteWorksheet
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Sikeresen törölve
+        '404':
+          description: Nem található
+
+  /worksheets/{id}/notes:
+    get:
+      tags: [ worksheet_note ]
+      summary: Megjegyzések lekérdezése egy munkalaphoz
+      operationId: getNotesByWorksheetId
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Megjegyzések listája
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorksheetNote'
+
+    post:
+      tags: [ worksheet_note ]
+      summary: Megjegyzés hozzáadása munkalaphoz
+      operationId: createNote
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorksheetNote'
+      responses:
+        '201':
+          description: Létrehozott megjegyzés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorksheetNote'
+  /worksheets/list:
+    get:
+      tags:
+        - worksheet
+      summary: Rövidített worksheet lista
+      description: Csak a legfontosabb mezőket adja vissza a worksheet-ekhez.
+      operationId: getWorksheetList
+      responses:
+        '200':
+          description: Rövidített worksheet lista
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorksheetListDto'
+  /worksheets/{id}/details:
+    get:
+      tags: [ worksheet ]
+      summary: Get worksheet with full entity graph
+      operationId: getWorksheetDetails
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Worksheet with full details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorksheetDetail'
+        '404':
+          description: Worksheet not found
+  /worksheet:
+    post:
+      summary: Create worksheet
+      description: Create a new worksheet with defects, notes, warranty flags, assignee, status, and spare parts.
+      tags:
+        - worksheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorksheetSaveRequest'
+      responses:
+        '201':
+          description: Worksheet created successfully
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
+  /worksheet/{id}/update:
+    put:
+      summary: Update worksheet
+      description: Update an existing worksheet with defects, notes, warranty flags, assignee, status, and spare parts.
+      tags:
+        - worksheet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the worksheet to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorksheetUpdateRequest'
+      responses:
+        '200':
+          description: Worksheet updated successfully
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '404':
+          description: Worksheet not found
+        '500':
+          description: "Email küldés sikertelen (MessagingException)"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Email küldés sikertelen: Invalid address"
 
 components:
   securitySchemes:
@@ -905,6 +1148,44 @@ components:
       bearerFormat: JWT
 
   schemas:
+    WorksheetDetail:
+      type: object
+      properties:
+        worksheetId:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/WorksheetStatus'
+        isWarranty:
+          type: boolean
+        hasWarrantyCard:
+          type: boolean
+        hasInvoiceCopy:
+          type: boolean
+        hasRegistrationProof:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        ownerDescription: # 🔹 ÚJ mező
+          type: string
+        tool:
+          $ref: '#/components/schemas/Tool'
+        defects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Defect'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorksheetNote'
+        spareParts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SparePartUsage'
+        assignedUser:
+          $ref: '#/components/schemas/UserSummary'
+
     SparePartUsage:
       type: object
       properties:
@@ -921,6 +1202,40 @@ components:
           type: integer
         fullName:
           type: string
+
+    WorksheetStatus:
+      type: string
+      description: A munkalap státusza
+      enum:
+        - BEERKEZETT
+        - FOLYAMATBAN
+        - FELKULDVE
+        - VISSZAERKEZETT
+        - KIAJANLOTT
+        - ELFOGADVA
+        - KIERTESTVE
+        - LEZART
+    WorksheetListDto:
+      type: object
+      properties:
+        worksheetId:
+          type: integer
+          format: int64
+        toolId:
+          type: integer
+          format: int64
+        toolItemNumber:
+          type: string
+        toolSerialNumber:
+          type: string
+        ownerCompanyName:
+          type: string
+        ownerCompanyEmployeeName:
+          type: string
+        assignedUserFullName:
+          type: string
+        status:
+          $ref: '#/components/schemas/WorksheetStatus'
 
     RegisterUserRequest:
       type: object
@@ -1014,9 +1329,9 @@ components:
         title:
           type: string
           example: "Software Engineer"
-        ownerCompanyId:
-          type: integer
-          example: 10
+        ownerCompanyName:
+          type: string
+          example: "Jóska Kft"
     OwnerCompany:
       type: object
       properties:
@@ -1124,3 +1439,159 @@ components:
           items:
             type: string
           example: [ "ROLE_ADMIN", "ROLE_USER" ]
+
+    WorksheetCreateRequest:
+      type: object
+      required:
+        - toolId
+        - isWarranty
+        - hasWarrantyCard
+        - hasInvoiceCopy
+        - hasRegistrationProof
+        - status
+        - assignee
+      properties:
+        toolId:
+          type: integer
+          description: A gép azonosítója
+          example: 2
+        isWarranty:
+          type: boolean
+          description: Garanciális-e
+          example: true
+        hasWarrantyCard:
+          type: boolean
+          description: Van-e jótállási kártya
+          example: false
+        hasInvoiceCopy:
+          type: boolean
+          description: Van-e számlamásolat
+          example: true
+        hasRegistrationProof:
+          type: boolean
+          description: Van-e regisztrációs igazolás
+          example: false
+        ownerDescription:
+          type: string
+          description: Tulajdonos által megadott leírás
+          example: "asd"
+        assignee:
+          type: integer
+          description: A hozzárendelt szerelő ID-je
+          example: 2
+        status:
+          type: string
+          description: Munkalap státusza
+          enum:
+            - BEERKEZETT
+            - FOLYAMATBAN
+            - FELKULDVE
+            - VISSZAERKEZETT
+            - KIAJANLOTT
+            - ELFOGADVA
+            - KIERTESTVE
+            - LEZART
+          example: BEERKEZETT
+
+    Worksheet:
+      type: object
+      required: [ toolId ]
+      properties:
+        id:
+          type: integer
+          example: 1
+        toolId:
+          type: integer
+          example: 5
+        isWarranty:
+          type: boolean
+          example: true
+        hasWarrantyCard:
+          type: boolean
+          example: true
+        hasInvoiceCopy:
+          type: boolean
+          example: false
+        hasRegistrationProof:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-05T10:15:30"
+    WorksheetNote:
+      type: object
+      properties:
+        noteId:
+          type: integer
+        userId:
+          type: integer
+        noteText:
+          type: string
+        userName:
+          type: string
+        postedDate:
+          type: string
+          format: date-time
+    WorksheetSaveRequest:
+      type: object
+      properties:
+        toolId:
+          type: integer
+        defectIds:
+          type: array
+          items:
+            type: integer
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorksheetNote'
+        isWarranty:
+          type: boolean
+        hasWarrantyCard:
+          type: boolean
+        hasInvoiceCopy:
+          type: boolean
+        hasRegistrationProof:
+          type: boolean
+        assignee:
+          type: integer
+          nullable: false
+        status:
+          type: string
+          enum:
+            - BEERKEZETT
+            - FOLYAMATBAN
+            - FELKULDVE
+            - VISSZAERKEZETT
+            - KIAJANLOTT
+            - ELFOGADVA
+            - KIERTESTVE
+            - LEZART
+        spareParts:
+          type: array
+          items:
+            type: object
+            properties:
+              sparePartId:
+                type: integer
+              quantity:
+                type: integer
+            required:
+              - sparePartId
+              - quantity
+      required:
+        - toolId
+        - defectIds
+        - notes
+        - isWarranty
+        - hasWarrantyCard
+        - hasInvoiceCopy
+        - hasRegistrationProof
+        - status
+        - spareParts
+
+    WorksheetUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/WorksheetSaveRequest'
+

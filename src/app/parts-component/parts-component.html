@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <h2>Alkatrészek</h2>
+
+  <!-- Új alkatrész létrehozása -->
+  <div class="card p-3 mb-4">
+    <h5>Új alkatrész</h5>
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input type="text"
+               class="form-control"
+               placeholder="Megnevezés"
+               [(ngModel)]="newPart().itemName">
+      </div>
+      <div class="col-md-3">
+        <input type="text"
+               class="form-control"
+               placeholder="Cikkszám"
+               [(ngModel)]="newPart().itemNumber">
+      </div>
+      <div class="col-md-2">
+        <input type="number"
+               class="form-control"
+               placeholder="Beszerzési ár"
+               [(ngModel)]="newPart().nettoBuyingPrice">
+      </div>
+      <div class="col-md-2">
+        <input type="number"
+               class="form-control"
+               placeholder="Eladási ár"
+               [(ngModel)]="newPart().nettoSellingPrice">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100" (click)="addPart()">Hozzáadás</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alkatrészek listája -->
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Megnevezés</th>
+      <th>Cikkszám</th>
+      <th>Beszerzési ár</th>
+      <th>Eladási ár</th>
+      <th>Műveletek</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (part of parts(); track part.id) {
+        <tr>
+          @if (editingPart() && editingPart()?.id === part.id) {
+            <td>{{ part.id }}</td>
+            <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemName"></td>
+            <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemNumber"></td>
+            <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoBuyingPrice"></td>
+            <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoSellingPrice"></td>
+            <td>
+              <button class="btn btn-primary btn-sm me-2" (click)="saveEdit()">Mentés</button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
+            </td>
+          } @else {
+            <td>{{ part.id }}</td>
+            <td>{{ part.itemName }}</td>
+            <td>{{ part.itemNumber }}</td>
+            <td>{{ part.nettoBuyingPrice | number:'1.0-2' }} Ft</td>
+            <td>{{ part.nettoSellingPrice | number:'1.0-2' }} Ft</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="editPart(part)">Szerkesztés</button>
+              <button class="btn btn-danger btn-sm" (click)="deletePart(part.id!)">Törlés</button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
