@@ -1,9 +1,9 @@
 <div class="container mt-4">
-  <h2>Alkalmazottak</h2>
+  <h2>Tulajdonos személyek</h2>
 
   <!-- Új alkalmazott -->
   <div class="card p-3 mb-4">
-    <h5>Új alkalmazott</h5>
+    <h5>Új  tulajdonos felvétele</h5>
     <div class="row g-2">
       <div class="col-md-2">
         <input type="text" class="form-control" placeholder="Név" [(ngModel)]="newEmployee().name">
@@ -30,7 +30,6 @@
   <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
-      <th>ID</th>
       <th>Név</th>
       <th>Email</th>
       <th>Telefon</th>
@@ -43,7 +42,7 @@
       @for (emp of employees(); track emp.id) {
         <tr>
           @if (editingEmployee() && editingEmployee()?.id === emp.id) {
-            <td>{{ emp.id }}</td>
+
             <td><input type="text" class="form-control" [(ngModel)]="editingEmployee()!.name"></td>
             <td><input type="email" class="form-control" [(ngModel)]="editingEmployee()!.email"></td>
             <td><input type="number" class="form-control" [(ngModel)]="editingEmployee()!.telNum"></td>
@@ -54,7 +53,7 @@
               <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
             </td>
           } @else {
-            <td>{{ emp.id }}</td>
+
             <td>{{ emp.name }}</td>
             <td>{{ emp.email }}</td>
             <td>{{ emp.telNum }}</td>

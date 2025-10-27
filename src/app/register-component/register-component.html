@@ -31,16 +31,52 @@
                  [(ngModel)]="password" name="password" required>
         </div>
 
-        <div class="mb-3">
-          <label for="position" class="form-label">Beosztás</label>
-          <select id="position" class="form-select" [(ngModel)]="position" name="position">
-            <option value="" disabled selected>Válassza ki a beosztást</option>
-            <option value="Admin">Adminisztrátor</option>
-            <option value="Vezető">Vezető</option>
-            <option value="Szervizes">Szervizes</option>
-            <option value="Eladó">Eladó</option>
-          </select>
+        <div class="p-4">
+          <h3>Szerepek kezelése</h3>
+
+          <div class="flex items-center gap-2 mt-3">
+            <select
+              [ngModel]="selectedRole()"
+              (ngModelChange)="selectedRole.set($event)"
+              class="border rounded p-2"
+            >
+              <option value="" disabled selected>Válassz szerepet...</option>
+
+              @for (role of roleSignal(); track role) {
+                <option [value]="role">{{ role }}</option>
+              }
+            </select>
+
+
+
+            <button
+              (click)="addRole()"
+              class="bg-blue-500 text-white px-3 py-2 rounded"
+            >
+              ➕ Hozzáadás
+            </button>
+          </div>
+
+          @if (roles().length > 0) {
+            <div class="mt-4">
+              <h4>Hozzáadott szerepek:</h4>
+              <ul class="list-disc pl-6">
+                @for (role of roles(); track role) {
+                  <li class="flex items-center gap-2">
+                    <span>{{ role }}</span>
+                    <button
+                      (click)="removeRole(role)"
+                      class="bg-red-500 text-white text-sm px-2 py-1 rounded"
+                    >
+                      ❌ Eltávolítás
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
         </div>
+
         <button class="btn btn-primary w-100" type="submit">Felvesz</button>
       </form>
     </div>

@@ -29,7 +29,6 @@
     <table class="table table-bordered table-striped align-middle text-center">
       <thead class="table-dark">
       <tr>
-        <th>Azonosító</th>
         <th>Típusszám</th>
         <th>Sorozatszám</th>
         <th>Behozta</th>
@@ -39,10 +38,7 @@
       </tr>
       <tr>
 
-        <th><input class="form-control"
-                   [ngModel]="filters()['toolId']"
-                   (ngModelChange)="updateFilter('toolId', $event)"
-                   placeholder="Keresés..."/></th>
+
         <th><input class="form-control"
                    [ngModel]="filters()['toolItemNumber']"
                    (ngModelChange)="updateFilter('toolItemNumber', $event)"
@@ -72,7 +68,6 @@
       <tbody>
         @for (worksheet of filteredWorksheets(); track worksheet.worksheetId) {
           <tr (click)="goToWorksheet(worksheet.worksheetId!)" class="clickable-row">
-            <td>{{ worksheet.toolId}}</td>
             <td>{{ worksheet.toolItemNumber }}</td>
             <td>{{ worksheet.toolSerialNumber }}</td>
             <td>{{ worksheet.ownerCompanyName }}</td>

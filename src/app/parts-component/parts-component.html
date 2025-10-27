@@ -39,7 +39,7 @@
   <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
-      <th>ID</th>
+
       <th>Megnevezés</th>
       <th>Cikkszám</th>
       <th>Beszerzési ár</th>
@@ -51,7 +51,6 @@
       @for (part of parts(); track part.id) {
         <tr>
           @if (editingPart() && editingPart()?.id === part.id) {
-            <td>{{ part.id }}</td>
             <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemName"></td>
             <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemNumber"></td>
             <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoBuyingPrice"></td>
@@ -61,7 +60,6 @@
               <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
             </td>
           } @else {
-            <td>{{ part.id }}</td>
             <td>{{ part.itemName }}</td>
             <td>{{ part.itemNumber }}</td>
             <td>{{ part.nettoBuyingPrice | number:'1.0-2' }} Ft</td>

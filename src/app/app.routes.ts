@@ -13,6 +13,7 @@ import {CollaguesComponent} from './collague-component/collagues-component';
 import {WorksheetCreateComponent} from './worksheet-component/worksheet-create/workshet-create';
 
 import {WorksheetComponent} from './worksheet-component/worksheet-component';
+import {WorksheetDetailsComponent} from './worksheet-component/worksheet-details/worksheet-details';
 
 
 export const routes: Routes = [
@@ -31,6 +32,7 @@ export const routes: Routes = [
 
   { path: 'worksheet', component: WorksheetComponent, canActivate: [roleGuard()] },
   { path: 'worksheet/new', component: WorksheetCreateComponent, canActivate: [roleGuard()] },
+  { path: 'worksheet/:id', component: WorksheetDetailsComponent, canActivate: [roleGuard()] },
 
 
   { path: '', redirectTo: 'home', pathMatch: 'full' }

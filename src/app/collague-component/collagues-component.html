@@ -13,7 +13,7 @@
     <table class="table table-bordered table-striped mt-3">
       <thead class="table-dark">
       <tr>
-        <th>ID</th>
+
         <th>Név</th>
         <th>Email</th>
         <th>Jogosultságok</th>
@@ -22,7 +22,7 @@
       <tbody>
         @for (user of users(); track user.id) {
           <tr>
-            <td>{{ user.id }}</td>
+
             <td>{{ user.fullName }}</td>
             <td>{{ user.email }}</td>
             <td>
@@ -48,9 +48,9 @@
                         [(ngModel)]="newRole()[user.id!]"
                         [ngModelOptions]="{standalone: true}">
                   <option [ngValue]="null" disabled selected>Jogosultság kiválasztása</option>
-                  <option value="Manager">Manager</option>
-                  <option value="Technician">Technician</option>
-                  <option value="Admin">Admin</option>
+                  <option value="Manager">Vezető</option>
+                  <option value="Technician">Technikus</option>
+                  <option value="Admin">Adminisztrátor</option>
                 </select>
 
                 <button class="btn btn-success"

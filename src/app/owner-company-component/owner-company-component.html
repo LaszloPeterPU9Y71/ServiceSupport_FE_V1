@@ -33,7 +33,6 @@
   <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
-      <th>ID</th>
       <th>Név</th>
       <th>Adószám</th>
       <th>Bankszámlaszám</th>
@@ -47,7 +46,7 @@
       @for (company of companies(); track company.id) {
         <tr>
           @if (editingCompany() && editingCompany()?.id === company.id) {
-            <td>{{ company.id }}</td>
+
             <td><input type="text" class="form-control" [(ngModel)]="editingCompany()!.name"></td>
             <td><input type="text" class="form-control" [(ngModel)]="editingCompany()!.taxNumber"></td>
             <td><input type="text" class="form-control" [(ngModel)]="editingCompany()!.accountNumber"></td>
@@ -59,7 +58,7 @@
               <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
             </td>
           } @else {
-            <td>{{ company.id }}</td>
+
             <td>{{ company.name }}</td>
             <td>{{ company.taxNumber }}</td>
             <td>{{ company.accountNumber }}</td>

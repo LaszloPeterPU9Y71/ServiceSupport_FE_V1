@@ -9,6 +9,7 @@ api/defect.service.ts
 api/health.service.ts
 api/ownerCompany.service.ts
 api/ownerCompanyEmployee.service.ts
+api/role.service.ts
 api/sparePart.service.ts
 api/tool.service.ts
 api/user.service.ts

@@ -10,6 +10,21 @@ security:
   - bearerAuth: [ ]
 
 paths:
+  /getAllRole:
+    get:
+      operationId: Get all roles
+      tags: [ Role ]
+      security: [ ]
+      responses:
+        '200':
+          description: OK válasz
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
   /api/health:
     get:
       summary: Egyszerű elérhetőségi teszt
@@ -802,7 +817,6 @@ paths:
           description: Deleted
         '404':
           description: Not found
-
   /worksheet/{worksheetId}/assign/{userId}:
     post:
       tags: [ worksheet ]
@@ -840,7 +854,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Worksheet'
-
 
   /spare-parts:
     get:
@@ -1186,6 +1199,7 @@ components:
         assignedUser:
           $ref: '#/components/schemas/UserSummary'
 
+
     SparePartUsage:
       type: object
       properties:
@@ -1236,7 +1250,6 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/WorksheetStatus'
-
     RegisterUserRequest:
       type: object
       required:
@@ -1331,7 +1344,7 @@ components:
           example: "Software Engineer"
         ownerCompanyName:
           type: string
-          example: "Jóska Kft"
+
     OwnerCompany:
       type: object
       properties:
@@ -1439,7 +1452,6 @@ components:
           items:
             type: string
           example: [ "ROLE_ADMIN", "ROLE_USER" ]
-
     WorksheetCreateRequest:
       type: object
       required:
