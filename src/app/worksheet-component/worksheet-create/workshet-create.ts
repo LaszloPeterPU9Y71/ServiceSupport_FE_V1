@@ -47,11 +47,27 @@ export class WorksheetCreateComponent {
   }
 
   createWorksheet() {
+    const fd = this.formData();
 
+    const payload = {
+      toolId: fd.toolId,
+      isWarranty: fd.warranty,
+      hasWarrantyCard: fd.hasWarrantyCard,
+      hasInvoiceCopy: fd.hasInvoiceCopy,
+      hasRegistrationProof: fd.hasRegistrationProof,
+      ownerDescription: fd.ownerDescription,
+      assignee: fd.assignee,
+      status: StatusEnum.Beerkezett,
+      notes: [],
+      spareParts: []
+    };
+
+    this.worksheetService.createWorksheet(payload).subscribe({
+      next: () => {
+        alert('Munkalap létrehozva!');
+        this.router.navigate(['/worksheet']);
+      },
+      error: err => console.error('Hiba a mentés közben:', err)
+    });
   }
-
-  addError() {
-    window.open('/defects', '_blank');
-  }
-
 }

@@ -1,7 +1,7 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Tool, ToolService} from '../api';
+import {OwnerCompanyEmployee, OwnerCompanyEmployeeService, Tool, ToolService} from '../api';
 
 
 @Component({
@@ -11,21 +11,27 @@ import {Tool, ToolService} from '../api';
   imports: [CommonModule, FormsModule],
 })
 export class ToolComponent implements OnInit {
-
   tools = signal<Tool[]>([]);
+  customers = signal<OwnerCompanyEmployee[]>([]);
 
-  // a filterek minden mezőre
   filters = signal<Partial<Record<string, string>>>({});
 
-  // computed, ami kiszámolja a szűrt listát
+  newTool: Tool = {
+    name: '',
+    typeNumber: '',
+    itemNumber: '',
+    serialNumber: '',
+    owner: undefined, // ezt a dropdown fogja beállítani
+  };
+
+  isSaving = signal(false);
+  saveSuccess = signal(false);
+  saveError = signal(false);
+
   filteredTools = computed(() => {
-    const all = this.tools();
+    const list = this.tools();
     const f = this.filters();
-
-    return all.filter(tool =>
-      // státusz szűrés
-
-      // mező szűrések
+    return list.filter(tool =>
       (!f['tool_id'] || tool.tool_id?.toString().toLowerCase().includes(f['tool_id'].toLowerCase())) &&
       (!f['ownerName'] || tool.ownerName?.toLowerCase().includes(f['ownerName'].toLowerCase())) &&
       (!f['ownerCompanyName'] || tool.ownerCompanyName?.toLowerCase().includes(f['ownerCompanyName'].toLowerCase())) &&
@@ -36,22 +42,63 @@ export class ToolComponent implements OnInit {
     );
   });
 
-  constructor(private toolService: ToolService) {
-  }
+  constructor(
+    private toolService: ToolService,
+    private ownerService: OwnerCompanyEmployeeService
+  ) {}
 
   ngOnInit(): void {
+    this.loadTools();
+    this.loadCustomers();
+  }
+
+  loadTools() {
     this.toolService.toolsGet().subscribe({
-      next: (data: Tool[]) => this.tools.set(data),
-      error: (err: any) => console.error('Hiba történt az eszközök lekérdezésekor:', err),
+      next: data => this.tools.set(data),
+      error: err => console.error('Hiba történt az eszközök lekérdezésekor:', err),
     });
   }
 
-  updateFilter(field: string, value: string): void {
-    this.filters.set({
-      ...this.filters(),
-      [field]: value,
+  loadCustomers() {
+    this.ownerService.ownerCompanyEmployeesGet().subscribe({
+      next: data => this.customers.set(data),
+      error: err => console.error('Hiba történt a kapcsolattartók lekérdezésekor:', err),
     });
   }
 
+  updateFilter(field: string, value: string) {
+    this.filters.update(prev => ({ ...prev, [field]: value }));
+  }
 
+  resetForm() {
+    this.newTool = {
+      name: '',
+      typeNumber: '',
+      itemNumber: '',
+      serialNumber: '',
+      owner: undefined,
+    };
+    this.saveSuccess.set(false);
+    this.saveError.set(false);
+  }
+
+  createTool() {
+    this.isSaving.set(true);
+    this.saveSuccess.set(false);
+    this.saveError.set(false);
+
+    this.toolService.toolsPost(this.newTool).subscribe({
+      next: created => {
+        this.tools.update(list => [...list, created]);
+        this.saveSuccess.set(true);
+        this.isSaving.set(false);
+        this.resetForm();
+      },
+      error: err => {
+        console.error('Hiba történt az eszköz mentésekor:', err);
+        this.saveError.set(true);
+        this.isSaving.set(false);
+      },
+    });
+  }
 }

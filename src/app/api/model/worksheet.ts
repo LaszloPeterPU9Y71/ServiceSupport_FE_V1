@@ -11,6 +11,7 @@
 
 export interface Worksheet { 
     id?: number;
+    customId?: string;
     toolId: number;
     isWarranty?: boolean;
     hasWarrantyCard?: boolean;

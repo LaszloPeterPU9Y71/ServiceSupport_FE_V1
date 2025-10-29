@@ -15,5 +15,6 @@ export interface RegisterUserRequest {
     email: string;
     password: string;
     position?: string;
+    roles?: Array<string>;
 }
 

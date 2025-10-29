@@ -1,80 +1,75 @@
 <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
   <div class="card shadow-lg" style="width: 500px;">
+
     <div class="card-header text-white text-center bg-primary">
       <h4 class="mb-0">Munkatárs felvétele</h4>
       <small>Alkalmazott adatai</small>
     </div>
-    <div *ngIf="error()" class="alert alert-danger mt-3">{{ error() }}</div>
+
+    @if (error()) {
+      <div class="alert alert-danger mb-0 rounded-0">{{ error() }}</div>
+    }
+
     <div class="card-body">
       <form (ngSubmit)="onRegister()">
+
         <div class="mb-3">
           <label for="fullName" class="form-label">Teljes név</label>
           <input id="fullName" type="text" class="form-control" placeholder="Teljes nevét írja ide!"
-                 [(ngModel)]="fullName" name="fullName" required>
+                 [(ngModel)]="fullName" name="fullName" required />
         </div>
 
         <div class="mb-3">
           <label for="phone" class="form-label">Telefonszám</label>
           <input id="phone" type="text" class="form-control" placeholder="Telefonszámát írja ide"
-                 [(ngModel)]="phone" name="phone" required>
+                 [(ngModel)]="phone" name="phone" required />
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">E-mail cím</label>
           <input id="email" type="email" class="form-control" placeholder="E-mail címét írja ide"
-                 [(ngModel)]="email" name="email" required>
+                 [(ngModel)]="email" name="email" required />
         </div>
 
         <div class="mb-3">
           <label for="password" class="form-label">Jelszó</label>
           <input id="password" type="password" class="form-control" placeholder="Jelszavát írja ide"
-                 [(ngModel)]="password" name="password" required>
+                 [(ngModel)]="password" name="password" required />
         </div>
 
-        <div class="p-4">
-          <h3>Szerepek kezelése</h3>
+        <div class="mb-3">
+          <label for="position" class="form-label">Beosztás / munkakör</label>
+          <input id="position" type="text" class="form-control" placeholder="Pl.: szerelő / ügyfélszolgálat"
+                 [(ngModel)]="position" name="position" required />
+        </div>
 
-          <div class="flex items-center gap-2 mt-3">
-            <select
-              [ngModel]="selectedRole()"
-              (ngModelChange)="selectedRole.set($event)"
-              class="border rounded p-2"
-            >
-              <option value="" disabled selected>Válassz szerepet...</option>
+        <div class="mb-3">
+          <label class="form-label d-block">Szerepkörök</label>
 
-              @for (role of roleSignal(); track role) {
-                <option [value]="role">{{ role }}</option>
-              }
-            </select>
-
-
-
-            <button
-              (click)="addRole()"
-              class="bg-blue-500 text-white px-3 py-2 rounded"
-            >
-              ➕ Hozzáadás
-            </button>
+          <div class="border rounded p-2" style="max-height: 140px; overflow-y: auto;">
+            @for (role of roleSignal(); track role) {
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'role-' + role"
+                  [value]="role"
+                  [checked]="isRoleSelected(role)"
+                  (change)="toggleRole(role, $event.target.checked)" />
+                <label class="form-check-label" [for]="'role-' + role">
+                  {{ role }}
+                </label>
+              </div>
+            } @empty {
+              <div class="text-muted small fst-italic">
+                Nincsenek szerepkörök betöltve
+              </div>
+            }
           </div>
 
-          @if (roles().length > 0) {
-            <div class="mt-4">
-              <h4>Hozzáadott szerepek:</h4>
-              <ul class="list-disc pl-6">
-                @for (role of roles(); track role) {
-                  <li class="flex items-center gap-2">
-                    <span>{{ role }}</span>
-                    <button
-                      (click)="removeRole(role)"
-                      class="bg-red-500 text-white text-sm px-2 py-1 rounded"
-                    >
-                      ❌ Eltávolítás
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
+          <div class="form-text">
+            Ha semmit nem pipálsz be, a felhasználó <strong>0 szerepkörrel</strong> jön létre.
+          </div>
         </div>
 
         <button class="btn btn-primary w-100" type="submit">Felvesz</button>

@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { OwnerCompanyEmployee } from './ownerCompanyEmployee';
 
 
 export interface Tool { 
@@ -16,13 +17,14 @@ export interface Tool {
     name?: string;
     serialNumber?: string;
     typeNumber?: string;
+    owner?: OwnerCompanyEmployee;
     /**
-     * Az ügyfél neve (owner_company_employee.name)
+     * Az ügyfél neve (kényelmi mező lista nézethez)
      */
-    ownerName?: string;
+    readonly ownerName?: string;
     /**
-     * Az ügyfél cégének neve (ha van, különben üresen marad)
+     * Az ügyfél cégének neve lista nézethez
      */
-    ownerCompanyName?: string;
+    readonly ownerCompanyName?: string;
 }
 

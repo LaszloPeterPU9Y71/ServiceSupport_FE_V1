@@ -1235,6 +1235,9 @@ components:
         worksheetId:
           type: integer
           format: int64
+        customId:
+          type: string
+          example: "2501/1"
         toolId:
           type: integer
           format: int64
@@ -1267,6 +1270,10 @@ components:
           type: string
         position:
           type: string
+        roles:
+          type: array
+          items:
+            type: string
     Tool:
       type: object
       properties:
@@ -1288,14 +1295,22 @@ components:
         typeNumber:
           type: string
           example: "TYP-1234"
+
+        owner:
+          $ref: '#/components/schemas/OwnerCompanyEmployee'
+
         ownerName:
           type: string
-          description: Az ügyfél neve (owner_company_employee.name)
+          readOnly: true
+          description: Az ügyfél neve (kényelmi mező lista nézethez)
           example: "Kiss János"
+
         ownerCompanyName:
           type: string
-          description: Az ügyfél cégének neve (ha van, különben üresen marad)
+          readOnly: true
+          description: Az ügyfél cégének neve lista nézethez
           example: "Szerszám Kuckó Kft."
+
     SparePart:
       type: object
       properties:
@@ -1512,6 +1527,9 @@ components:
         id:
           type: integer
           example: 1
+        customId:
+          type: string
+          example: "2501/1"
         toolId:
           type: integer
           example: 5

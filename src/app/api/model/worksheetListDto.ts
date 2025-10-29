@@ -12,6 +12,7 @@ import { WorksheetStatus } from './worksheetStatus';
 
 export interface WorksheetListDto { 
     worksheetId?: number;
+    customId?: string;
     toolId?: number;
     toolItemNumber?: string;
     toolSerialNumber?: string;

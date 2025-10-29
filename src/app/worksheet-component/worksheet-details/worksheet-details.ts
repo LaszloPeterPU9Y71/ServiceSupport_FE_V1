@@ -11,8 +11,8 @@ import {
   WorksheetService,
   WorksheetStatus
 } from '../../api';
-import {AuthStateService} from '../../service/auth-service';
 import {DatePipe, SlicePipe} from '@angular/common';
+import {AuthStateService} from '../../service/auth-service';
 
 @Component({
   selector: 'app-worksheet-details',

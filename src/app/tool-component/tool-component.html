@@ -1,11 +1,89 @@
 <div class="container-fluid">
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">Új eszköz felvétele</div>
 
-  <!-- Eszközök táblázata -->
+    <div class="card-body">
+      <form (ngSubmit)="createTool()" #toolForm="ngForm" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Megnevezés</label>
+          <input class="form-control"
+                 name="name"
+                 required
+                 [(ngModel)]="newTool.name" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Típusszám</label>
+          <input class="form-control"
+                 name="typeNumber"
+                 [(ngModel)]="newTool.typeNumber" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Cikkszám</label>
+          <input class="form-control"
+                 name="itemNumber"
+                 [(ngModel)]="newTool.itemNumber" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Sorszám</label>
+          <input class="form-control"
+                 name="serialNumber"
+                 [(ngModel)]="newTool.serialNumber" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Behozta</label>
+          <select class="form-select"
+                  name="owner"
+                  required
+                  [(ngModel)]="newTool.owner">
+            <option [ngValue]="undefined" disabled selected>Válassz...</option>
+
+            @for (c of customers(); track c.id) {
+              <option [ngValue]="c">
+                {{ c.name }}
+                @if (c.ownerCompanyName) {
+                  ({{ c.ownerCompanyName }})
+                }
+              </option>
+            } @empty {
+              <option [ngValue]="undefined" disabled>Nincs ügyfél</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-12 d-flex align-items-center gap-2 flex-wrap">
+          <button class="btn btn-primary"
+                  type="submit"
+                  [disabled]="toolForm.invalid || isSaving()">
+            {{ isSaving() ? 'Mentés...' : 'Hozzáadás' }}
+          </button>
+
+          <button class="btn btn-secondary"
+                  type="button"
+                  (click)="resetForm()"
+                  [disabled]="isSaving()">
+            Mégse
+          </button>
+
+          @if (saveSuccess()) {
+            <span class="text-success">✔ Sikeresen hozzáadva</span>
+          }
+          @if (saveError()) {
+            <span class="text-danger">✖ Hiba mentés közben</span>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="table-responsive">
     <table class="table table-bordered table-striped align-middle text-center">
       <thead class="table-dark">
       <tr>
-        <th>Azonosító</th>
+
         <th>Megnevezés</th>
         <th>Típusszám</th>
         <th>Cikkszám</th>
@@ -14,26 +92,19 @@
         <th>Cég neve</th>
       </tr>
       <tr>
-        <th><input class="form-control" [ngModel]="filters()['tool_id']"
-                   (ngModelChange)="updateFilter('tool_id', $event)" placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['ownerName']"
-                   (ngModelChange)="updateFilter('ownerName', $event)" placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['ownerCompanyName']"
-                   (ngModelChange)="updateFilter('ownerCompanyName', $event)" placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['name']" (ngModelChange)="updateFilter('name', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['typeNumber']"
-                   (ngModelChange)="updateFilter('typeNumber', $event)" placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['serialNumber']"
-                   (ngModelChange)="updateFilter('serialNumber', $event)" placeholder="Keresés..."/></th>
-        <th><input class="form-control" [ngModel]="filters()['itemNumber']"
-                   (ngModelChange)="updateFilter('itemNumber', $event)" placeholder="Keresés..."/></th>
+        <th><input class="form-control" [ngModel]="filters()['name']"              (ngModelChange)="updateFilter('name', $event)"              placeholder="Keresés..." /></th>
+        <th><input class="form-control" [ngModel]="filters()['typeNumber']"        (ngModelChange)="updateFilter('typeNumber', $event)"        placeholder="Keresés..." /></th>
+        <th><input class="form-control" [ngModel]="filters()['itemNumber']"        (ngModelChange)="updateFilter('itemNumber', $event)"        placeholder="Keresés..." /></th>
+        <th><input class="form-control" [ngModel]="filters()['serialNumber']"      (ngModelChange)="updateFilter('serialNumber', $event)"      placeholder="Keresés..." /></th>
+        <th><input class="form-control" [ngModel]="filters()['ownerName']"         (ngModelChange)="updateFilter('ownerName', $event)"         placeholder="Keresés..." /></th>
+        <th><input class="form-control" [ngModel]="filters()['ownerCompanyName']"  (ngModelChange)="updateFilter('ownerCompanyName', $event)"  placeholder="Keresés..." /></th>
       </tr>
       </thead>
+
       <tbody>
         @for (tool of filteredTools(); track tool.tool_id) {
           <tr>
-            <td>{{ tool.tool_id }}</td>
+
             <td>{{ tool.name }}</td>
             <td>{{ tool.typeNumber }}</td>
             <td>{{ tool.itemNumber }}</td>
