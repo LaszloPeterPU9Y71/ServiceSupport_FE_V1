@@ -7,9 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WorksheetNote } from './worksheetNote';
 
 
 export interface WorksheetCreateRequest { 
+    notes: Array<WorksheetNote>;
+    /**
+     * A hibák azonosítói
+     */
+    defectIds?: Array<number>;
     /**
      * A gép azonosítója
      */

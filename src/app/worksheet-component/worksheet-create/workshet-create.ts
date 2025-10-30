@@ -1,23 +1,40 @@
 import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {Tool, ToolService, User, UserService, WorksheetSaveRequest, WorksheetService} from '../../api';
+import {
+  Defect,
+  DefectService,
+  Tool,
+  ToolService,
+  User,
+  UserService,
+  WorksheetSaveRequest,
+  WorksheetService
+} from '../../api';
 import {Router} from '@angular/router';
 import StatusEnum = WorksheetSaveRequest.StatusEnum;
+import {CommonModule} from '@angular/common';
+import {AuthStateService} from '../../service/auth-service';
+
 
 @Component({
   selector: 'app-worksheet-create',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './worksheet-create.html'
 })
 export class WorksheetCreateComponent {
   private worksheetService = inject(WorksheetService);
   private userService = inject(UserService);
   private toolService = inject(ToolService);
+  private defectService = inject(DefectService);
   private router = inject(Router);
+  authState = inject(AuthStateService);
 
   users = signal<User[]>([]);
   tools = signal<Tool[]>([]);
+  selectedDefect = signal<number | undefined>(undefined);
+  defects = signal<Defect[]>([]);
+  newNote = signal<string>('');
 
   formData = signal<any>({
     toolId: null,
@@ -26,7 +43,10 @@ export class WorksheetCreateComponent {
     hasInvoiceCopy: false,
     hasRegistrationProof: false,
     ownerDescription: '',
-    assignee: null
+    assignee: null,
+    notes: [],
+    defectIds: []
+
   });
 
   constructor() {
@@ -39,11 +59,67 @@ export class WorksheetCreateComponent {
       next: data => this.tools.set(data),
       error: err => console.error('Hiba a gépek betöltésekor:', err)
     });
+
+    // 🔹 hibajelenségek betöltése
+    this.defectService.defectsGet().subscribe({
+      next: (data: any[]) => this.defects.set(data),
+      error: (err: any) => console.error('Hiba a hibajelenségek betöltésekor:', err)
+    });
   }
+
 
   // 🔹 Külön metódusok minden mező frissítésére
   updateField<K extends keyof any>(field: string, value: any) {
     this.formData.update(fd => ({...fd, [field]: value}));
+  }
+
+  getDefectName(id: number): string {
+    const def = this.defects().find(d => d.id === id);
+    return def ? def.name! : '';
+  }
+
+
+
+  addDefect() {
+    if (this.selectedDefect() != null) {
+      this.formData.update(fd => ({
+        ...fd,
+        defectIds: [...new Set([...fd.defectIds, this.selectedDefect()])]
+      }));
+      this.selectedDefect.set(undefined);
+    }
+  }
+
+  removeDefect(id: number) {
+    this.formData.update(fd => ({
+      ...fd,
+      defectIds: fd.defectIds.filter((d: number) => d !== id)
+    }));
+  }
+
+  addNote() {
+    if (this.newNote().trim()) {
+      this.formData.update(fd => ({
+        ...fd,
+        notes: [
+          ...fd.notes,
+          {
+            userId: this.authState.userId(),
+            noteText: this.newNote(),
+            userName: this.authState.username(),
+            postedDate: new Date().toISOString()
+          }
+        ]
+      }));
+      this.newNote.set('');
+    }
+  }
+
+  removeNote(noteId: number) {
+    this.formData.update(fd => ({
+      ...fd,
+      notes: fd.notes.filter((n: any) => n.noteId !== noteId)
+    }));
   }
 
   createWorksheet() {
@@ -58,9 +134,11 @@ export class WorksheetCreateComponent {
       ownerDescription: fd.ownerDescription,
       assignee: fd.assignee,
       status: StatusEnum.Beerkezett,
-      notes: [],
-      spareParts: []
+      notes: fd.notes,
+      defectIds: fd.defectIds,
     };
+
+
 
     this.worksheetService.createWorksheet(payload).subscribe({
       next: () => {
@@ -70,4 +148,7 @@ export class WorksheetCreateComponent {
       error: err => console.error('Hiba a mentés közben:', err)
     });
   }
+
+
+
 }

@@ -1,5 +1,6 @@
 <!-- Gépkiválasztás -->
 <div class="mb-3">
+
   <label class="form-label">Gép</label>
   <select class="form-select"
           [ngModel]="formData().toolId"
@@ -11,13 +12,61 @@
   </select>
 </div>
 
-<!-- Owner description -->
 <div class="mb-3">
-  <label class="form-label">Tulajdonos leírása</label>
-  <textarea class="form-control"
-            [ngModel]="formData().ownerDescription"
-            (ngModelChange)="updateField('ownerDescription', $event)"></textarea>
+  <h5>Hibajelenség</h5>
+
+  <select class="form-select mb-2"
+          [ngModel]="selectedDefect()"
+          (ngModelChange)="selectedDefect.set($event)">
+    <option [ngValue]="undefined">Válassz hibát...</option>
+    @for (defect of defects(); track defect.id) {
+      <option [ngValue]="defect.id">{{ defect.name }}</option>
+    }
+  </select>
+
+  <button class="btn btn-sm btn-outline-primary" (click)="addDefect()">Hozzáadás</button>
+
+  <ul class="mt-2">
+    @for (d of formData().defectIds; track d) {
+      <li>
+        {{ getDefectName(d) }}
+        <button class="btn btn-sm btn-link text-danger" (click)="removeDefect(d)">Törlés</button>
+      </li>
+    } @empty {
+      <li class="text-muted">Nincs kiválasztva hiba</li>
+    }
+  </ul>
 </div>
+
+<div class="mb-3">
+  <h5>Megjegyzések</h5>
+  <input class="form-control mb-2"
+         [ngModel]="newNote()"
+         (ngModelChange)="newNote.set($event)"
+         placeholder="Új megjegyzés..."/>
+
+
+  <button class="btn btn-sm btn-outline-primary" (click)="addNote()">Hozzáadás</button>
+
+  <ul class="mt-2">
+    @for (note of formData().notes; track note.noteId) {
+      <li>
+        <strong>{{ note.userName }}</strong> – {{ note.noteText }} – {{ note.postedDate | date: 'yyyy.MM.dd HH:mm' }}
+
+        @if (authState.canDeleteComment(note.userId)) {
+          <button class="btn btn-sm btn-link text-danger"
+                  (click)="removeNote(note.noteId)">
+            Törlés
+          </button>
+        }
+      </li>
+    } @empty {
+      <li class="text-muted">Nincsenek megjegyzések</li>
+    }
+  </ul>
+
+</div>
+
 
 <!-- Checkboxok -->
 <div class="form-check">
