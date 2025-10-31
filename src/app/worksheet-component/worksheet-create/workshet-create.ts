@@ -125,6 +125,23 @@ export class WorksheetCreateComponent {
   createWorksheet() {
     const fd = this.formData();
 
+    if (!fd.toolId) {
+      alert('❌ Kérlek, válassz eszközt!');
+      return;
+    }
+
+    if (!fd.assignee) {
+      alert('❌ Kérlek, válassz szerelőt!');
+      return;
+    }
+
+    // Opcionális: legalább egy hibajelenség
+    if (!fd.defectIds || fd.defectIds.length === 0) {
+      alert('❌ Legalább egy hibajelenséget válassz!');
+      return;
+    }
+
+
     const payload = {
       toolId: fd.toolId,
       isWarranty: fd.warranty,
@@ -137,8 +154,6 @@ export class WorksheetCreateComponent {
       notes: fd.notes,
       defectIds: fd.defectIds,
     };
-
-
 
     this.worksheetService.createWorksheet(payload).subscribe({
       next: () => {

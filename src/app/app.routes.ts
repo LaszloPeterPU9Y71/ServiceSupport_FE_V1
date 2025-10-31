@@ -22,14 +22,14 @@ export const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [roleGuard(undefined, { onlyWhenLoggedOut: true })] },
 
   { path: 'home', component:HomeComponent, canActivate: [roleGuard( undefined,{ onlyWhenLoggedOut: false})] },
-  { path: 'registration', component: RegisterComponent, canActivate: [roleGuard( undefined,{ onlyWhenLoggedOut: false})]},
+  { path: 'registration', component: RegisterComponent, canActivate:  [roleGuard(['ROLE_ADMIN'])] },
 
   { path: 'owner-company-employee', component: OwnerCompanyEmployeeComponent, canActivate: [roleGuard()] },
   { path: 'owner-company', component: OwnerCompanyComponent, canActivate: [roleGuard()] },
   { path: 'tools', component: ToolComponent, canActivate: [roleGuard()] },
   { path: 'parts', component: PartsComponent, canActivate: [roleGuard()] },
   { path: 'defects', component: DefectsComponent, canActivate: [roleGuard()] },
-  { path: 'collagues', component: CollaguesComponent, canActivate: [roleGuard()] },
+  { path: 'collagues', component: CollaguesComponent, canActivate: [roleGuard(['ROLE_ADMIN'])] },
 
   { path: 'worksheet', component: WorksheetComponent, canActivate: [roleGuard()] },
   { path: 'worksheet/new', component: WorksheetCreateComponent, canActivate: [roleGuard()] },

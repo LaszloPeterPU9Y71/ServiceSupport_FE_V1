@@ -98,13 +98,9 @@ class WorksheetDetailsComponent {
               sum + (p.sparePart.nettoSellingPrice ?? 0 ) * (p.quantity ?? 0),
             0
           )
-
         );
-
       }
-
     });
-
   }
 
   // Hibajelenségek

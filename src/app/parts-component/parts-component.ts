@@ -33,6 +33,45 @@ export class PartsComponent implements OnInit {
   }
 
   addPart(): void {
+
+
+    const raw = this.newPart() ?? {};
+    const part = {
+      itemName: raw.itemName?.trim() ?? '',
+      itemNumber: raw.itemNumber?.trim() ?? '',
+      nettoBuyingPrice: raw.nettoBuyingPrice ?? 0,
+      nettoSellingPrice: raw.nettoSellingPrice ?? 0
+    };
+
+    // ✅ Input ellenőrzés
+
+    // Megnevezés
+    // Ellenőrzések
+    if (!part.itemName) {
+      alert('❌ Az alkatrész neve kötelező.');
+      return;
+    }
+
+    if (!part.itemNumber) {
+      alert('❌ A cikkszám kötelező.');
+      return;
+    }
+
+    if (part.nettoBuyingPrice < 0) {
+      alert('❌ A beszerzési árnak 0 vagy nagyobb számnak kell lennie.');
+      return;
+    }
+
+    if (part.nettoSellingPrice < 0) {
+      alert('❌ Az eladási árnak 0 vagy nagyobb számnak kell lennie.');
+      return;
+    }
+
+    if (part.nettoSellingPrice <= part.nettoBuyingPrice) {
+      alert('❌ Az eladási ár nem lehet kisebb, vagy egyenlő mint a beszerzési ár.');
+      return;
+    }
+
     this.partService.sparePartsPost(this.newPart()).subscribe({
       next: () => {
         this.newPart.set({

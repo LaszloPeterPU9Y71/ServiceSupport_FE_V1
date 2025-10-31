@@ -33,6 +33,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     });
   }
 
+
   addEmployee(): void {
     const raw = this.newEmployee();
     const emp = {
@@ -41,6 +42,29 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
         ? +raw.ownerCompanyName
         : undefined
     };
+
+    // Teljes név ellenőrzés
+    if (!emp.name?.trim()) {
+      alert('❌ A teljes név kötelező.');
+      return;
+    }
+
+    if (!emp.telNum?.trim()) {
+      alert('❌ A telefonszám kitöltése kötelező.');
+      return;
+    }
+
+    // Email ellenőrzés
+    if (!emp.email?.trim()) {
+      alert('❌ Az email cím kötelező.');
+      return;
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emp.email)) {
+      alert('❌ Az email cím formátuma érvénytelen.');
+      return;
+    }
+
 
     this.employeeService.ownerCompanyEmployeesPost(emp).subscribe({
       next: () => {

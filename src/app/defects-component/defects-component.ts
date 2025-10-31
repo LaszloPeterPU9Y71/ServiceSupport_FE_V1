@@ -28,7 +28,29 @@ export class DefectsComponent implements OnInit {
   }
 
   addDefect(): void {
-    this.defectService.defectsPost(this.newDefect()).subscribe({
+    const defectName = this.newDefect()?.name?.trim();
+
+    // ✅ Input ellenőrzés
+    if (!defectName) {
+      alert('❌ Kérlek, add meg a hiba nevét!');
+      return;
+    }
+
+    // Opcionális: maximum hossz ellenőrzés
+    if (defectName.length > 100) {
+      alert('❌ A hiba neve túl hosszú (max. 100 karakter).');
+      return;
+    }
+
+    // Opcionális: csak betűk, számok és szóköz engedélyezése
+    const validPattern = /^[a-zA-Z0-9\sáéíóöőúüűÁÉÍÓÖŐÚÜŰ.,-]+$/;
+    if (!validPattern.test(defectName)) {
+      alert('❌ A hiba neve csak betűket, számokat és alapvető írásjeleket tartalmazhat.');
+      return;
+    }
+
+    // Ha minden rendben, küldjük az API-nak
+    this.defectService.defectsPost({ name: defectName }).subscribe({
       next: () => {
         this.newDefect.set({ name: '' });
         this.loadDefects();

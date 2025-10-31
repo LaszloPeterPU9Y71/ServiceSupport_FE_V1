@@ -61,15 +61,51 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister() {
-    // alap validációk
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.email)) {
-      this.error.set('Érvénytelen e-mail cím!');
+    const phoneRegex = /^[0-9+\s()-]+$/; // egyszerű telefonszám validáció
+
+    if (!this.fullName?.trim()) {
+      this.error.set('❌ A teljes név megadása kötelező!');
       return;
     }
 
-    if (!this.fullName || !this.phone || !this.email || !this.password || !this.position) {
-      this.error.set('Minden mezőt ki kell tölteni!');
+    if (!this.phone?.trim()) {
+      this.error.set('❌ A telefonszám megadása kötelező!');
+      return;
+    }
+
+    if (!phoneRegex.test(this.phone)) {
+      this.error.set('❌ Érvénytelen telefonszám!');
+      return;
+    }
+
+    if (!this.email?.trim()) {
+      this.error.set('❌ Az e-mail cím megadása kötelező!');
+      return;
+    }
+
+    if (!emailRegex.test(this.email)) {
+      this.error.set('❌ Érvénytelen e-mail cím!');
+      return;
+    }
+
+    if (!this.password?.trim()) {
+      this.error.set('❌ A jelszó megadása kötelező!');
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.error.set('❌ A jelszó legalább 6 karakter hosszú legyen!');
+      return;
+    }
+
+    if (!this.position?.trim()) {
+      this.error.set('❌ A pozíció megadása kötelező!');
+      return;
+    }
+
+    if (!this.selectedRoles || this.selectedRoles.length === 0) {
+      this.error.set('❌ Legalább egy szerepkört ki kell választani!');
       return;
     }
 

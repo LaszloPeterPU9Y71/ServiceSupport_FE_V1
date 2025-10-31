@@ -35,7 +35,43 @@ export class OwnerCompanyComponent implements OnInit {
   }
 
   addCompany(): void {
-    this.ownerCompanyService.ownerCompaniesPost(this.newCompany()).subscribe({
+    const company = this.newCompany();
+
+    // ✅ Input ellenőrzés
+    if (!company.name?.trim()) {
+      alert('❌ A cég neve kötelező.');
+      return;
+    }
+
+    if (!company.taxNumber?.trim()) {
+      alert('❌ Az adószám kötelező.');
+      return;
+    }
+
+    if (!company.town?.trim()) {
+      alert('❌ A város megadása kötelező.');
+      return;
+    }
+
+    if (!company.street?.trim()) {
+      alert('❌ Az utca megadása kötelező.');
+      return;
+    }
+
+    if (!company.postalCode || company.postalCode <= 0) {
+      alert('❌ A irányítószám érvényes szám kell legyen.');
+      return;
+    }
+
+    // Opcionális: formátum ellenőrzés regex-szel
+    const taxNumberPattern = /^[0-9]{8}-[0-9]{1}-[0-9]{2}$/; // példa: 12345678-1-12
+    if (!taxNumberPattern.test(company.taxNumber)) {
+      alert('❌ Az adószám formátuma érvénytelen. Példa: 12345678-1-12');
+      return;
+    }
+
+    // ✅ Ha minden rendben, küldjük az API-nak
+    this.ownerCompanyService.ownerCompaniesPost(company).subscribe({
       next: () => {
         this.newCompany.set({
           accountNumber: '',

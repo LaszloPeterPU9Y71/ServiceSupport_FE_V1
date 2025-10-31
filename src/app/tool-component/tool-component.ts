@@ -83,6 +83,17 @@ export class ToolComponent implements OnInit {
   }
 
   createTool() {
+
+    // ✅ Input ellenőrzés
+    if (!this.newTool.name?.trim()) {
+      alert('❌ A megnevezés kötelező.');
+      return;
+    }
+
+    if (this.newTool.owner === undefined || this.newTool.owner === null) {
+      alert('❌ A tulajdonos kiválasztása kötelező.');
+      return;
+    }
     this.isSaving.set(true);
     this.saveSuccess.set(false);
     this.saveError.set(false);
