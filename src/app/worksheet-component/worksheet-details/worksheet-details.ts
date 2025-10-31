@@ -11,16 +11,16 @@ import {
   WorksheetService,
   WorksheetStatus
 } from '../../api';
-import {DatePipe, SlicePipe} from '@angular/common';
+import {DatePipe, DecimalPipe, SlicePipe} from '@angular/common';
 import {AuthStateService} from '../../service/auth-service';
 
 @Component({
   selector: 'app-worksheet-details',
   standalone: true,
-  imports: [FormsModule, DatePipe, SlicePipe],
+  imports: [FormsModule, DatePipe, SlicePipe, DecimalPipe],
   templateUrl: './worksheet-details.html',
 })
-export class WorksheetDetailsComponent {
+class WorksheetDetailsComponent {
   private route = inject(ActivatedRoute);
   private worksheetService = inject(WorksheetService);
   private defectService = inject(DefectService);
@@ -89,15 +89,22 @@ export class WorksheetDetailsComponent {
 
     effect(() => {
       const fd = this.formData();
+      console.log(this.totalGross)
+      console.log(fd);
       if (fd?.spareParts) {
         this.totalGross.set(
           fd.spareParts.reduce(
-            (sum: number, p: any) => sum + (p.netPrice ?? 0) * (p.quantity ?? 0),
+            (sum: number, p: any) =>
+              sum + (p.sparePart.nettoSellingPrice ?? 0 ) * (p.quantity ?? 0),
             0
           )
+
         );
+
       }
+
     });
+
   }
 
   // Hibajelenségek
@@ -279,3 +286,5 @@ export class WorksheetDetailsComponent {
   }
 
 }
+
+export default WorksheetDetailsComponent

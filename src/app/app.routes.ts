@@ -12,7 +12,7 @@ import {DefectsComponent} from './defects-component/defects-component';
 import {CollaguesComponent} from './collague-component/collagues-component';
 
 import {WorksheetComponent} from './worksheet-component/worksheet-component';
-import {WorksheetDetailsComponent} from './worksheet-component/worksheet-details/worksheet-details';
+import WorksheetDetailsComponent from './worksheet-component/worksheet-details/worksheet-details';
 import {WorksheetCreateComponent} from './worksheet-component/worksheet-create/workshet-create';
 
 
