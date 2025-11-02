@@ -15,6 +15,7 @@ export class DefectsComponent implements OnInit {
   defects = signal<Defect[]>([]);
   newDefect = signal<Defect>({ name: '' });
   editingDefect = signal<Defect | null>(null);
+  private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
     this.loadDefects();
@@ -85,5 +86,23 @@ export class DefectsComponent implements OnInit {
       next: () => this.loadDefects(),
       error: (err) => console.error('❌ Hiba hiba törlésekor:', err)
     });
+  }
+  filters() {
+    return this._filters();
+  }
+
+  updateFilter(key: string, value: string) {
+    this._filters.update(f => ({ ...f, [key]: value.toLowerCase() }));
+  }
+  filteredDefects() {
+    const fs = this._filters();
+
+    return this.defects()
+      // input filterek
+      .filter(part =>
+        Object.entries(fs).every(([key, val]) =>
+          !val || (part as any)[key]?.toString().toLowerCase().includes(val.toLowerCase())
+        )
+      )
   }
 }

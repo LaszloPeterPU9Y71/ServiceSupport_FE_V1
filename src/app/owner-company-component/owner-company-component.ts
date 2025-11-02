@@ -22,6 +22,7 @@ export class OwnerCompanyComponent implements OnInit {
     town: ''
   });
   editingCompany = signal<OwnerCompany | null>(null);
+  private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -32,6 +33,10 @@ export class OwnerCompanyComponent implements OnInit {
       next: (data) => this.companies.set(data),
       error: (err) => console.error('❌ Hiba a cégek betöltésekor:', err)
     });
+  }
+
+  filters() {
+    return this._filters();
   }
 
   addCompany(): void {
@@ -114,4 +119,21 @@ export class OwnerCompanyComponent implements OnInit {
       error: (err) => console.error('❌ Hiba cég törlésekor:', err)
     });
   }
+
+  updateFilter(key: string, value: string) {
+    this._filters.update(f => ({ ...f, [key]: value.toLowerCase() }));
+  }
+
+  filteredCompanies() {
+    const fs = this._filters();
+
+    return this.companies()
+      // input filterek
+      .filter(companies =>
+        Object.entries(fs).every(([key, val]) =>
+          !val || (companies as any)[key]?.toString().toLowerCase().includes(val.toLowerCase())
+        )
+      )
+  }
+
 }

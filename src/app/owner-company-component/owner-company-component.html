@@ -41,9 +41,28 @@
       <th>Utca</th>
       <th>Műveletek</th>
     </tr>
+    <tr>
+    <th>
+      <input class="form-control"
+             [ngModel]="filters()['name']"
+             (ngModelChange)="updateFilter('name', $event)"
+             placeholder="Keresés...">
+    </th>
+    <th>
+      <input class="form-control"
+             [ngModel]="filters()['taxNumber']"
+             (ngModelChange)="updateFilter('taxNumber', $event)"
+             placeholder="Keresés...">
+    </th>
+    <th></th>
+    <th></th>
+    <th></th>
+      <th></th>
+      <th></th>
+    </tr>
     </thead>
     <tbody>
-      @for (company of companies(); track company.id) {
+      @for (company of filteredCompanies(); track company.id) {
         <tr>
           @if (editingCompany() && editingCompany()?.id === company.id) {
 

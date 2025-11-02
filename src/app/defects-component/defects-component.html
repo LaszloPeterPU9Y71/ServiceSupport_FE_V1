@@ -24,9 +24,19 @@
       <th>Név</th>
       <th>Műveletek</th>
     </tr>
+    <tr>
+      <th>
+        <input class="form-control"
+               [ngModel]="filters()['name']"
+               (ngModelChange)="updateFilter('name', $event)"
+               placeholder="Keresés...">
+      </th>
+      <th></th>
+    </tr>
     </thead>
+
     <tbody>
-      @for (defect of defects(); track defect.id) {
+      @for (defect of filteredDefects(); track defect.id) {
         <tr>
           @if (editingDefect() && editingDefect()?.id === defect.id) {
             <td><input type="text" class="form-control" [(ngModel)]="editingDefect()!.name"></td>
