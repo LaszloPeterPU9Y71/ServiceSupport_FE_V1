@@ -29,6 +29,7 @@ export class WorksheetCreateComponent {
   private defectService = inject(DefectService);
   private router = inject(Router);
   authState = inject(AuthStateService);
+  dropdownOpen = signal(false);
 
   users = signal<User[]>([]);
   tools = signal<Tool[]>([]);
@@ -65,6 +66,18 @@ export class WorksheetCreateComponent {
       next: (data: any[]) => this.defects.set(data),
       error: (err: any) => console.error('Hiba a hibajelenségek betöltésekor:', err)
     });
+  }
+
+  selectTool(tool: any) {
+    this.updateField('toolId', tool.id);
+    this.dropdownOpen.set(false);
+  }
+
+  getToolDisplayName(toolId: number | null): string {
+    const tool = this.tools().find(t => t.id === toolId);
+    return tool
+      ? `${tool.name} (${tool.itemNumber})`
+      : '';
   }
 
 

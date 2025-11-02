@@ -25,6 +25,17 @@
 
     <button
       class="btn"
+      routerLink="/home"
+      routerLinkActive="btn-primary"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [ngClass]="{ 'btn-outline-primary': !homeButton.isActive }"
+      #homeButton="routerLinkActive"
+    >
+      Főoldal
+    </button>
+
+    <button
+      class="btn"
       routerLink="/registration"
       routerLinkActive="btn-primary"
       [routerLinkActiveOptions]="{ exact: false }"

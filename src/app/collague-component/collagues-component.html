@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>Felhasználók</h2>
+  <h2>A Szerszám Kuckó Kft Alkalmazottai</h2>
 
   @if (loading()) {
     <div class="alert alert-info mt-3">Betöltés folyamatban...</div>
@@ -16,6 +16,7 @@
 
         <th>Név</th>
         <th>Email</th>
+        <th>Telefonszám</th>
         <th>Jogosultságok</th>
       </tr>
       </thead>
@@ -25,6 +26,7 @@
 
             <td>{{ user.fullName }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user.phoneNumber }}</td>
             <td>
 
               <div class="d-flex flex-wrap gap-2">

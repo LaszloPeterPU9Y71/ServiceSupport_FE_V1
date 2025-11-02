@@ -10,7 +10,7 @@ import { AuthStateService } from '../service/auth-service';
     <h6>Jogosultság: </h6>
     <ul>
       @for (role of auth.roles(); track $index) {
-        <li>{{ role }}</li>
+        <li>{{ roleNames[role] || role }}</li>
       }
     </ul>
 
@@ -20,7 +20,15 @@ import { AuthStateService } from '../service/auth-service';
 export class HomeComponent {
   auth = inject(AuthStateService);
 
+  // Role kulcsok → emberi olvasható nevek
+  roleNames: Record<string, string> = {
+    ROLE_ADMIN: 'Adminisztrátor',
+    ROLE_TECHNICIAN: 'Szerelő',
+    ROLE_MANAGER: 'Vezető'
+  };
+
   onLogout() {
     this.auth.logout();
   }
 }
+

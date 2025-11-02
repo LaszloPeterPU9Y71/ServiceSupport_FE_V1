@@ -2,6 +2,7 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {User, UserService} from '../api';
+import {HomeComponent} from '../home-component/home-component';
 
 @Component({
   selector: 'app-collagues',
@@ -11,6 +12,7 @@ import {User, UserService} from '../api';
 })
 export class CollaguesComponent implements OnInit {
   private userService = inject(UserService);
+
 
   // --- Signals ---
   users = signal<User[]>([]);
