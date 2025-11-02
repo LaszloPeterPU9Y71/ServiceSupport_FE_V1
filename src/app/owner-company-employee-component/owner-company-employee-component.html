@@ -37,9 +37,37 @@
       <th>Cégnév</th>
       <th>Műveletek</th>
     </tr>
+    <tr>
+      <th>
+        <input class="form-control"
+               [ngModel]="filters()['name']"
+               (ngModelChange)="updateFilter('name', $event)"
+               placeholder="Keresés...">
+      </th>
+      <th>
+        <input class="form-control"
+               [ngModel]="filters()['email']"
+               (ngModelChange)="updateFilter('email', $event)"
+               placeholder="Keresés...">
+      </th>
+      <th>
+        <input class="form-control"
+               [ngModel]="filters()['telNum']"
+               (ngModelChange)="updateFilter('telNum', $event)"
+               placeholder="Keresés...">
+      </th>
+      <th></th>
+      <th>
+        <input class="form-control"
+               [ngModel]="filters()['ownerCompanyName']"
+               (ngModelChange)="updateFilter('ownerCompanyName', $event)"
+               placeholder="Keresés...">
+      </th>
+      <th></th>
+    </tr>
     </thead>
     <tbody>
-      @for (emp of employees(); track emp.id) {
+      @for (emp of filteredEmployees(); track emp.id) {
         <tr>
           @if (editingEmployee() && editingEmployee()?.id === emp.id) {
 

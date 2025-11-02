@@ -21,6 +21,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     ownerCompanyName: undefined
   });
   editingEmployee = signal<OwnerCompanyEmployee | null>(null);
+  private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
     this.loadEmployees();
@@ -78,6 +79,24 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
 
   editEmployee(emp: OwnerCompanyEmployee): void {
     this.editingEmployee.set({...emp});
+  }
+  filters() {
+    return this._filters();
+  }
+
+  updateFilter(key: string, value: string) {
+    this._filters.update(f => ({ ...f, [key]: value.toLowerCase() }));
+  }
+  filteredEmployees() {
+    const fs = this._filters();
+
+    return this.employees()
+      // input filterek
+      .filter(employee =>
+        Object.entries(fs).every(([key, val]) =>
+          !val || (employee as any)[key]?.toString().toLowerCase().includes(val.toLowerCase())
+        )
+      )
   }
 
   saveEdit(): void {
