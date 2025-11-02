@@ -2,28 +2,32 @@
   <h2>Alkatrészek</h2>
 
   <!-- Új alkatrész létrehozása -->
-  <div class="card p-3 mb-4">
-    <h5>Új alkatrész</h5>
-    <div class="row g-2">
+  <div class="card shadow-sm p-3 mb-4">
+    <h5 class="mb-3">Új alkatrész</h5>
+    <div class="row g-2 align-items-end">
       <div class="col-md-3">
+        <label class="form-label visually-hidden">Megnevezés</label>
         <input type="text"
                class="form-control"
                placeholder="Megnevezés"
                [(ngModel)]="newPart().itemName">
       </div>
       <div class="col-md-3">
+        <label class="form-label visually-hidden">Cikkszám</label>
         <input type="text"
                class="form-control"
                placeholder="Cikkszám"
                [(ngModel)]="newPart().itemNumber">
       </div>
       <div class="col-md-2">
+        <label class="form-label visually-hidden">Beszerzési ár</label>
         <input type="number"
                class="form-control"
                placeholder="Beszerzési ár"
                [(ngModel)]="newPart().nettoBuyingPrice">
       </div>
       <div class="col-md-2">
+        <label class="form-label visually-hidden">Eladási ár</label>
         <input type="number"
                class="form-control"
                placeholder="Eladási ár"
@@ -36,41 +40,68 @@
   </div>
 
   <!-- Alkatrészek listája -->
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-    <tr>
-
-      <th>Megnevezés</th>
-      <th>Cikkszám</th>
-      <th>Beszerzési ár</th>
-      <th>Eladási ár</th>
-      <th>Műveletek</th>
-    </tr>
-    </thead>
-    <tbody>
-      @for (part of parts(); track part.id) {
-        <tr>
-          @if (editingPart() && editingPart()?.id === part.id) {
-            <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemName"></td>
-            <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemNumber"></td>
-            <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoBuyingPrice"></td>
-            <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoSellingPrice"></td>
-            <td>
-              <button class="btn btn-primary btn-sm me-2" (click)="saveEdit()">Mentés</button>
-              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
-            </td>
-          } @else {
-            <td>{{ part.itemName }}</td>
-            <td>{{ part.itemNumber }}</td>
-            <td>{{ part.nettoBuyingPrice | number:'1.0-2' }} Ft</td>
-            <td>{{ part.nettoSellingPrice | number:'1.0-2' }} Ft</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" (click)="editPart(part)">Szerkesztés</button>
-              <button class="btn btn-danger btn-sm" (click)="deletePart(part.id!)">Törlés</button>
-            </td>
-          }
-        </tr>
-      }
-    </tbody>
-  </table>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-dark">
+          <tr>
+            <th>Megnevezés</th>
+            <th>Cikkszám</th>
+            <th>Beszerzési ár</th>
+            <th>Eladási ár</th>
+            <th>Műveletek</th>
+          </tr>
+          <!-- Keresősor -->
+          <tr>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['itemName']"
+                     (ngModelChange)="updateFilter('itemName', $event)"
+                     placeholder="Keresés...">
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['itemNumber']"
+                     (ngModelChange)="updateFilter('itemNumber', $event)"
+                     placeholder="Keresés...">
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (part of filteredParts(); track part.id) {
+              <tr>
+                @if (editingPart() && editingPart()?.id === part.id) {
+                  <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemName"></td>
+                  <td><input type="text" class="form-control" [(ngModel)]="editingPart()!.itemNumber"></td>
+                  <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoBuyingPrice"></td>
+                  <td><input type="number" class="form-control" [(ngModel)]="editingPart()!.nettoSellingPrice"></td>
+                  <td>
+                    <button class="btn btn-primary btn-sm me-2" (click)="saveEdit()">Mentés</button>
+                    <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
+                  </td>
+                } @else {
+                  <td>{{ part.itemName }}</td>
+                  <td>{{ part.itemNumber }}</td>
+                  <td>{{ part.nettoBuyingPrice | number:'1.0-2' }} Ft</td>
+                  <td>{{ part.nettoSellingPrice | number:'1.0-2' }} Ft</td>
+                  <td>
+                    <button class="btn btn-warning btn-sm me-2" (click)="editPart(part)">Szerkesztés</button>
+                    <button class="btn btn-danger btn-sm" (click)="deletePart(part.id!)">Törlés</button>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="text-center text-muted">Nincs találat</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

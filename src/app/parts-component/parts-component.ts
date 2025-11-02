@@ -20,9 +20,19 @@ export class PartsComponent implements OnInit {
     nettoSellingPrice: 0
   });
   editingPart = signal<SparePart | null>(null);
+  private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
     this.loadParts();
+  }
+
+
+  filters() {
+    return this._filters();
+  }
+
+  updateFilter(key: string, value: string) {
+    this._filters.update(f => ({ ...f, [key]: value.toLowerCase() }));
   }
 
   loadParts(): void {
@@ -112,5 +122,17 @@ export class PartsComponent implements OnInit {
       next: () => this.loadParts(),
       error: (err) => console.error('❌ Hiba part törlésekor:', err)
     });
+  }
+
+  filteredParts() {
+    const fs = this._filters();
+
+    return this.parts()
+      // input filterek
+      .filter(part =>
+        Object.entries(fs).every(([key, val]) =>
+          !val || (part as any)[key]?.toString().toLowerCase().includes(val.toLowerCase())
+        )
+      )
   }
 }
