@@ -32,7 +32,6 @@ export class ToolComponent implements OnInit {
     const list = this.tools();
     const f = this.filters();
     return list.filter(tool =>
-      (!f['tool_id'] || tool.tool_id?.toString().toLowerCase().includes(f['tool_id'].toLowerCase())) &&
       (!f['ownerName'] || tool.ownerName?.toLowerCase().includes(f['ownerName'].toLowerCase())) &&
       (!f['ownerCompanyName'] || tool.ownerCompanyName?.toLowerCase().includes(f['ownerCompanyName'].toLowerCase())) &&
       (!f['name'] || tool.name?.toLowerCase().includes(f['name'].toLowerCase())) &&

@@ -12,7 +12,6 @@ import { OwnerCompanyEmployee } from './ownerCompanyEmployee';
 
 export interface Tool { 
     id?: number;
-    tool_id?: string;
     itemNumber?: string;
     name?: string;
     serialNumber?: string;

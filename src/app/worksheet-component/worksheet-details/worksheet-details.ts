@@ -29,10 +29,11 @@ class WorksheetDetailsComponent {
   authState = inject(AuthStateService);
   worksheet = signal<WorksheetDetail | undefined>(undefined);
   formData = signal<any>(undefined);
-
+  vat = 1.27;
   defects = signal<Defect[]>([]);
   statusOptions = Object.values(WorksheetStatus);
-  totalGross = signal(0);
+  totalGrossNetto = signal(0);
+  totalGrossBrutto: number = 0;
   spareParts = signal<SparePart[]>([]);
   users = signal<User[]>([]);
 
@@ -89,14 +90,15 @@ class WorksheetDetailsComponent {
 
     effect(() => {
       const fd = this.formData();
-      console.log(this.totalGross)
+      console.log(this.totalGrossNetto)
       console.log(fd);
       if (fd?.spareParts) {
-        this.totalGross.set(
+        this.totalGrossNetto.set(
           fd.spareParts.reduce(
             (sum: number, p: any) =>
               sum + (p.sparePart.nettoSellingPrice ?? 0 ) * (p.quantity ?? 0),
             0
+
           )
         );
       }

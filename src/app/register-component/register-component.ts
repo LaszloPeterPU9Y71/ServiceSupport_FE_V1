@@ -27,32 +27,38 @@ export class RegisterComponent implements OnInit {
 
   // szerepkörök, amiket a backend küld (pl. ["ROLE_ADMIN", "ROLE_USER"])
   roleSignal = signal<string[]>([]);
-
   // szerepkörök, amiket kipipáltunk
   selectedRoles: string[] = [];
 
+  roles = signal<{ value: string; label: string }[]>([
+    { value: 'Admin', label: 'Adminisztrátor' },
+    { value: 'Technician', label: 'Szerelő' },
+    { value: 'Manager', label: 'Menedzser' }
+  ]);
+
+  rolesSignal() {
+    return this.roles();
+  }
   ngOnInit() {
     this.roleService.getAllRoles().subscribe({
       next: roles => {
         this.roleSignal.set(roles ?? []);
       },
       error: err => {
+        console.log("Ez van benne: " + this.roleSignal);
         console.error('Szerepkörök lekérése sikertelen', err);
         this.roleSignal.set([]);
       }
     });
   }
 
-  // checkbox pipálás logika
   toggleRole(role: string, checked: boolean) {
     if (checked) {
-      // hozzáadjuk ha még nincs benne
-      if (!this.selectedRoles.includes(role)) {
-        this.selectedRoles = [...this.selectedRoles, role];
-      }
+      // mindig csak egy szerepkört tartunk a tömbben
+      this.selectedRoles = [role];
     } else {
-      // kivesszük
-      this.selectedRoles = this.selectedRoles.filter(r => r !== role);
+      // ha "uncheck", üres tömb
+      this.selectedRoles = [];
     }
   }
 
@@ -115,7 +121,7 @@ export class RegisterComponent implements OnInit {
       email: this.email,
       password: this.password,
       position: this.position,
-      roles: this.selectedRoles, // <-- EZ A LÉNYEG
+      roles: this.selectedRoles,
     };
 
     this.userService.registerUser(newUser).subscribe({

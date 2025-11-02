@@ -29,15 +29,12 @@
 
               <div class="d-flex flex-wrap gap-2">
                 <label class="input-group-text" for="roleSelect{{ user.id }}">Jogosultságok:</label>
-                @for (role of user.roles; track role) {
-                  <span class="badge bg-primary">
-                    {{ role }}
-                    <button type="button"
-                            class="btn-close btn-close-white ms-2"
-                            (click)="removeRole(user, role)">
-                    </button>
-                  </span>
-                }
+
+                @for (role of user.roles; track role) { <span class="badge bg-primary">
+                  {{ role }}
+                  <button type="button" class="btn-close btn-close-white ms-2" (click)="removeRole(user, role)">
+                </button>
+                </span> }
               </div>
 
               <div class="input-group mt-2 d-flex align-items-center gap-2">
@@ -48,9 +45,10 @@
                         [(ngModel)]="newRole()[user.id!]"
                         [ngModelOptions]="{standalone: true}">
                   <option [ngValue]="null" disabled selected>Jogosultság kiválasztása</option>
-                  <option value="Manager">Vezető</option>
-                  <option value="Technician">Technikus</option>
                   <option value="Admin">Adminisztrátor</option>
+                  <option value="Manager">Menedzser</option>
+                  <option value="Technician">Szerelő</option>
+
                 </select>
 
                 <button class="btn btn-success"

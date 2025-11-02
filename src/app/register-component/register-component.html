@@ -47,17 +47,18 @@
           <label class="form-label d-block">Szerepkörök</label>
 
           <div class="border rounded p-2" style="max-height: 140px; overflow-y: auto;">
-            @for (role of roleSignal(); track role) {
+            @for (roleObj of rolesSignal(); track roleObj.value) {
               <div class="form-check">
                 <input
                   class="form-check-input"
-                  type="checkbox"
-                  [id]="'role-' + role"
-                  [value]="role"
-                  [checked]="isRoleSelected(role)"
-                  (change)="toggleRole(role, $event.target.checked)" />
-                <label class="form-check-label" [for]="'role-' + role">
-                  {{ role }}
+                  type="radio"
+                  name="role"
+                  [id]="'role-' + roleObj.value"
+                  [value]="roleObj.value"
+                  [checked]="isRoleSelected(roleObj.value)"
+                  (change)="toggleRole(roleObj.value, $event.target.checked)" />
+                <label class="form-check-label" [for]="'role-' + roleObj.value">
+                  {{ roleObj.label }}
                 </label>
               </div>
             } @empty {

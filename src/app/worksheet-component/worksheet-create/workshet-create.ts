@@ -154,7 +154,6 @@ export class WorksheetCreateComponent {
       notes: fd.notes,
       defectIds: fd.defectIds,
     };
-
     this.worksheetService.createWorksheet(payload).subscribe({
       next: () => {
         alert('Munkalap létrehozva!');
