@@ -1,5 +1,7 @@
-<div class="container-fluid">
-  <div class="card mb-4">
+<div class="container mt-4">
+  <h3 class="mb-3">Javításra beadott gépek</h3>
+
+  <div class="card mb-4 shadow-sm">
     <div class="card-header bg-dark text-white">Új eszköz felvétele</div>
 
     <div class="card-body">
@@ -83,7 +85,6 @@
     <table class="table table-bordered table-striped align-middle text-center">
       <thead class="table-dark">
       <tr>
-
         <th>Megnevezés</th>
         <th>Típusszám</th>
         <th>Cikkszám</th>
@@ -92,19 +93,48 @@
         <th>Cég neve</th>
       </tr>
       <tr>
-        <th><input class="form-control" [ngModel]="filters()['name']"              (ngModelChange)="updateFilter('name', $event)"              placeholder="Keresés..." /></th>
-        <th><input class="form-control" [ngModel]="filters()['typeNumber']"        (ngModelChange)="updateFilter('typeNumber', $event)"        placeholder="Keresés..." /></th>
-        <th><input class="form-control" [ngModel]="filters()['itemNumber']"        (ngModelChange)="updateFilter('itemNumber', $event)"        placeholder="Keresés..." /></th>
-        <th><input class="form-control" [ngModel]="filters()['serialNumber']"      (ngModelChange)="updateFilter('serialNumber', $event)"      placeholder="Keresés..." /></th>
-        <th><input class="form-control" [ngModel]="filters()['ownerName']"         (ngModelChange)="updateFilter('ownerName', $event)"         placeholder="Keresés..." /></th>
-        <th><input class="form-control" [ngModel]="filters()['ownerCompanyName']"  (ngModelChange)="updateFilter('ownerCompanyName', $event)"  placeholder="Keresés..." /></th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['name']"
+                 (ngModelChange)="updateFilter('name', $event)"
+                 placeholder="Keresés..." />
+        </th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['typeNumber']"
+                 (ngModelChange)="updateFilter('typeNumber', $event)"
+                 placeholder="Keresés..." />
+        </th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['itemNumber']"
+                 (ngModelChange)="updateFilter('itemNumber', $event)"
+                 placeholder="Keresés..." />
+        </th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['serialNumber']"
+                 (ngModelChange)="updateFilter('serialNumber', $event)"
+                 placeholder="Keresés..." />
+        </th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['ownerName']"
+                 (ngModelChange)="updateFilter('ownerName', $event)"
+                 placeholder="Keresés..." />
+        </th>
+        <th>
+          <input class="form-control"
+                 [ngModel]="filters()['ownerCompanyName']"
+                 (ngModelChange)="updateFilter('ownerCompanyName', $event)"
+                 placeholder="Keresés..." />
+        </th>
       </tr>
       </thead>
 
       <tbody>
         @for (tool of filteredTools(); track tool.id) {
           <tr>
-
             <td>{{ tool.name }}</td>
             <td>{{ tool.typeNumber }}</td>
             <td>{{ tool.itemNumber }}</td>
@@ -114,7 +144,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="9" class="text-muted text-center">Nincs találat</td>
+            <td colspan="6" class="text-muted text-center">Nincs találat</td>
           </tr>
         }
       </tbody>

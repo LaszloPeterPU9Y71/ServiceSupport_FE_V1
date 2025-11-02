@@ -1,92 +1,110 @@
-<div class="container-fluid">
-  <!-- Státusz szűrés gombok -->
-  <div class="d-flex justify-content-center my-3 gap-2 flex-wrap">
-    <!-- Összes gomb -->
-    <button
-      class="btn"
-      [ngClass]="selectedStatus() === null ? 'btn-primary' : 'btn-outline-primary'"
-      (click)="clearStatusFilter()">
-      Összes
-    </button>
+<div class="container mt-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white">Javítási munkalapok</div>
+    <div class="card-body">
 
-    <!-- Enum értékekből gombok -->
-    @for (status of statusOptions; track status) {
-      <button
-        class="btn"
-        [ngClass]="selectedStatus() === status ? 'btn-primary' : 'btn-outline-primary'"
-        (click)="filterByStatus(status)">
-        {{ status }}
-      </button>
-    }
-    <button class="btn btn-success" routerLink="/worksheet/new">
-      ➕ Új munkalap
-    </button>
-  </div>
+      <!-- Státusz szűrés gombok -->
+      <div class="d-flex justify-content-center my-3 gap-2 flex-wrap">
+        <!-- Összes gomb -->
+        <button
+          class="btn"
+          [ngClass]="selectedStatus() === null ? 'btn-primary' : 'btn-outline-primary'"
+          (click)="clearStatusFilter()">
+          Összes
+        </button>
 
-
-  <!-- Worksheet táblázat -->
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle text-center">
-      <thead class="table-dark">
-      <tr>
-        <th>Munkalap sorszáma</th>
-        <th>Típusszám</th>
-        <th>Sorozatszám</th>
-        <th>Behozta</th>
-        <th>Cégnév</th>
-        <th>Szervizbe felvette</th>
-        <th>Státusz</th>
-      </tr>
-      <tr>
-
-
-        <th><input class="form-control"
-                   [ngModel]="filters()['customId']"
-                   (ngModelChange)="updateFilter('customId', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['toolItemNumber']"
-                   (ngModelChange)="updateFilter('toolItemNumber', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['toolSerialNumber']"
-                   (ngModelChange)="updateFilter('toolSerialNumber', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['ownerCompanyName']"
-                   (ngModelChange)="updateFilter('ownerCompanyName', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['ownerCompanyEmployeeName']"
-                   (ngModelChange)="updateFilter('ownerCompanyEmployeeName', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['assignedUserFullName']"
-                   (ngModelChange)="updateFilter('assignedUserFullName', $event)"
-                   placeholder="Keresés..."/></th>
-        <th><input class="form-control"
-                   [ngModel]="filters()['status']"
-                   (ngModelChange)="updateFilter('status', $event)"
-                   placeholder="Keresés..."/></th>
-      </tr>
-      </thead>
-      <tbody>
-        @for (worksheet of filteredWorksheets(); track worksheet.worksheetId) {
-          <tr (click)="goToWorksheet(worksheet.worksheetId!)" class="clickable-row">
-            <td>{{ worksheet.customId }}</td>
-            <td>{{ worksheet.toolItemNumber }}</td>
-            <td>{{ worksheet.toolSerialNumber }}</td>
-            <td>{{ worksheet.ownerCompanyName }}</td>
-            <td>{{ worksheet.ownerCompanyEmployeeName }}</td>
-            <td>{{ worksheet.assignedUserFullName }}</td>
-            <td>{{ worksheet.status }}</td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="8" class="text-muted text-center">Nincs találat</td>
-          </tr>
+        <!-- Enum értékekből gombok -->
+        @for (status of statusOptions; track status) {
+          <button
+            class="btn"
+            [ngClass]="selectedStatus() === status ? 'btn-primary' : 'btn-outline-primary'"
+            (click)="filterByStatus(status)">
+            {{ status }}
+          </button>
         }
-      </tbody>
-    </table>
+        <button class="btn btn-success" routerLink="/worksheet/new">
+          ➕ Új munkalap
+        </button>
+      </div>
+
+      <!-- Worksheet táblázat -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle text-center mb-0">
+          <thead class="table-dark">
+          <tr>
+            <th>Munkalap sorszáma</th>
+            <th>Típusszám</th>
+            <th>Sorozatszám</th>
+            <th>Behozta</th>
+            <th>Cégnév</th>
+            <th>Szervizbe felvette</th>
+            <th>Státusz</th>
+          </tr>
+          <tr>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['customId']"
+                     (ngModelChange)="updateFilter('customId', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['toolItemNumber']"
+                     (ngModelChange)="updateFilter('toolItemNumber', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['toolSerialNumber']"
+                     (ngModelChange)="updateFilter('toolSerialNumber', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['ownerCompanyName']"
+                     (ngModelChange)="updateFilter('ownerCompanyName', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['ownerCompanyEmployeeName']"
+                     (ngModelChange)="updateFilter('ownerCompanyEmployeeName', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['assignedUserFullName']"
+                     (ngModelChange)="updateFilter('assignedUserFullName', $event)"
+                     placeholder="Keresés..." />
+            </th>
+            <th>
+              <input class="form-control"
+                     [ngModel]="filters()['status']"
+                     (ngModelChange)="updateFilter('status', $event)"
+                     placeholder="Keresés..." />
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (worksheet of filteredWorksheets(); track worksheet.worksheetId) {
+              <tr (click)="goToWorksheet(worksheet.worksheetId!)" class="clickable-row">
+                <td>{{ worksheet.customId }}</td>
+                <td>{{ worksheet.toolItemNumber }}</td>
+                <td>{{ worksheet.toolSerialNumber }}</td>
+                <td>{{ worksheet.ownerCompanyName }}</td>
+                <td>{{ worksheet.ownerCompanyEmployeeName }}</td>
+                <td>{{ worksheet.assignedUserFullName }}</td>
+                <td>{{ worksheet.status }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="text-muted text-center">Nincs találat</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
 </div>
