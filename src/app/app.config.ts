@@ -5,17 +5,21 @@ import {
   provideZonelessChangeDetection
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
-import {provideHttpClient} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http';
 import {provideApi} from './api';   // 👈 generált OpenAPI modul
 
 import {routes} from './app.routes';
 import {GlobalErrorHandler} from './service/error-handler';
+import {ErrorInterceptor} from './service/error-interceptor';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+
     provideRouter(routes),
 
     // 🔹 kell a HttpClient

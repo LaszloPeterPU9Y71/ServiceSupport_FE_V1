@@ -1,7 +1,7 @@
 import {Component, computed, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {OwnerCompanyEmployee, OwnerCompanyEmployeeService, Tool, ToolService} from '../api';
+import {OwnerCompany, OwnerCompanyEmployee, OwnerCompanyEmployeeService, Tool, ToolService} from '../api';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class ToolComponent implements OnInit {
   isSaving = signal(false);
   saveSuccess = signal(false);
   saveError = signal(false);
+  editingTool = signal<Tool | null >(null);
 
   filteredTools = computed(() => {
     const list = this.tools();
@@ -40,6 +41,7 @@ export class ToolComponent implements OnInit {
       (!f['itemNumber'] || tool.itemNumber?.toLowerCase().includes(f['itemNumber'].toLowerCase()))
     );
   });
+
 
   constructor(
     private toolService: ToolService,
@@ -111,4 +113,26 @@ export class ToolComponent implements OnInit {
       },
     });
   }
+  editTool(tool: Tool): void {
+    this.editingTool.set({ ...tool });
+  }
+
+  saveEdit(): void {
+    const company = this.editingTool();
+    if (!company || !company.id) return;
+
+    this.toolService.toolsIdPut(company.id, company).subscribe({
+      next: () => {
+        this.editingTool.set(null);
+        this.loadTools();
+      },
+      error: (err) => console.error('❌ Hiba cég szerkesztéskor:', err)
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingTool.set(null);
+  }
+
+
 }

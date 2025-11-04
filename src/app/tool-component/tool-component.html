@@ -91,6 +91,7 @@
         <th>Sorszám</th>
         <th>Behozta</th>
         <th>Cég neve</th>
+        <th>Műveletek</th>
       </tr>
       <tr>
         <th>
@@ -129,26 +130,47 @@
                  (ngModelChange)="updateFilter('ownerCompanyName', $event)"
                  placeholder="Keresés..." />
         </th>
+        <th></th>
       </tr>
+
 
       </thead>
 
       <tbody>
         @for (tool of filteredTools(); track tool.id) {
           <tr>
-            <td>{{ tool.name }}</td>
-            <td>{{ tool.typeNumber }}</td>
-            <td>{{ tool.itemNumber }}</td>
-            <td>{{ tool.serialNumber }}</td>
-            <td>{{ tool.ownerName }}</td>
-            <td>{{ tool.ownerCompanyName }}</td>
+            @if (editingTool() && editingTool()?.id === tool.id) {
+              <!-- Szerkesztő mezők -->
+              <td><input class="form-control" [(ngModel)]="editingTool()!.name" /></td>
+              <td><input class="form-control" [(ngModel)]="editingTool()!.typeNumber" /></td>
+              <td><input class="form-control" [(ngModel)]="editingTool()!.itemNumber" /></td>
+              <td><input class="form-control" [(ngModel)]="editingTool()!.serialNumber" /></td>
+              <td></td>
+              <td></td>
+
+              <td class="d-flex gap-2 justify-content-center">
+                <button class="btn btn-primary btn-sm" (click)="saveEdit()">Mentés</button>
+                <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Mégse</button>
+              </td>
+            } @else {
+              <!-- Normál sor -->
+              <td>{{ tool.name }}</td>
+              <td>{{ tool.typeNumber }}</td>
+              <td>{{ tool.itemNumber }}</td>
+              <td>{{ tool.serialNumber }}</td>
+              <td>{{ tool.ownerName }}</td>
+              <td>{{ tool.ownerCompanyName }}</td>
+              <td>
+                <button class="btn btn-warning btn-sm me-2" (click)="editTool(tool)">Szerkesztés</button>
+              </td>
+            }
           </tr>
         } @empty {
           <tr>
-            <td colspan="6" class="text-muted text-center">Nincs találat</td>
+            <td colspan="7" class="text-muted text-center">Nincs találat</td>
           </tr>
         }
       </tbody>
-    </table>
+    </table>>
   </div>
 </div>

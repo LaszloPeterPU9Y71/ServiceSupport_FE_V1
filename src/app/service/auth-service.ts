@@ -92,8 +92,10 @@ export class AuthStateService {
       error: (err) => {
         console.error(err);
         this.clearAuth();
+        return err;
       }
     });
+    return undefined;
   }
 
   // ---- Logout ----
