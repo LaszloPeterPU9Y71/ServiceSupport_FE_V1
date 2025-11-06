@@ -16,6 +16,7 @@ export class DefectsComponent implements OnInit {
   newDefect = signal<Defect>({ name: '' });
   editingDefect = signal<Defect | null>(null);
   private _filters = signal<Record<string, string>>({});
+  error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadDefects();
@@ -24,7 +25,7 @@ export class DefectsComponent implements OnInit {
   loadDefects(): void {
     this.defectService.defectsGet().subscribe({
       next: (data) => this.defects.set(data),
-      error: (err) => console.error('❌ Hiba a hibák betöltésekor:', err)
+      error: () => this.error.set('❌ Hiba a hibák betöltésekor:')
     });
   }
 
@@ -56,7 +57,7 @@ export class DefectsComponent implements OnInit {
         this.newDefect.set({ name: '' });
         this.loadDefects();
       },
-      error: (err) => console.error('❌ Hiba új hiba létrehozásakor:', err)
+      error: () => this.error.set('❌ Hiba új hiba létrehozásakor:')
     });
   }
 
@@ -73,7 +74,7 @@ export class DefectsComponent implements OnInit {
         this.editingDefect.set(null);
         this.loadDefects();
       },
-      error: (err) => console.error('❌ Hiba hiba szerkesztéskor:', err)
+      error: () => this.error.set('❌ Hiba hiba szerkesztéskor:')
     });
   }
 
@@ -84,7 +85,7 @@ export class DefectsComponent implements OnInit {
   deleteDefect(id: number): void {
     this.defectService.defectsIdDelete(id).subscribe({
       next: () => this.loadDefects(),
-      error: (err) => console.error('❌ Hiba hiba törlésekor:', err)
+      error: (err) => this.error.set('❌ Hiba hiba törlésekor:')
     });
   }
   filters() {

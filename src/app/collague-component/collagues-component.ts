@@ -54,6 +54,7 @@ export class CollaguesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Szerep hozzáadás hiba:', err);
+        this.error.set('Szerep hozzáadás hiba:');
       }
     });
   }
@@ -63,6 +64,7 @@ export class CollaguesComponent implements OnInit {
       next: () => this.loadUsers(),
       error: (err) => {
         console.error('Szerep eltávolítás hiba:', err);
+        this.error.set('Szerep eltávolítás hiba:');
       }
     });
   }

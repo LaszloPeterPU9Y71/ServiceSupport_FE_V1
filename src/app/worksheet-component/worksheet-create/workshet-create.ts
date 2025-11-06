@@ -36,6 +36,7 @@ export class WorksheetCreateComponent {
   selectedDefect = signal<number | undefined>(undefined);
   defects = signal<Defect[]>([]);
   newNote = signal<string>('');
+  error = signal<string | null>(null);
 
   formData = signal<any>({
     toolId: null,
@@ -53,18 +54,18 @@ export class WorksheetCreateComponent {
   constructor() {
     this.userService.getAllUsers().subscribe({
       next: data => this.users.set(data),
-      error: err => console.error('Hiba a userek betöltésekor:', err)
+      error: ()=> this.error.set('Hiba a userek betöltésekor.')
     });
 
     this.toolService.toolsGet().subscribe({
       next: data => this.tools.set(data),
-      error: err => console.error('Hiba a gépek betöltésekor:', err)
+      error: () => this.error.set('Hiba a gépek betöltésekor.')
     });
 
     // 🔹 hibajelenségek betöltése
     this.defectService.defectsGet().subscribe({
       next: (data: any[]) => this.defects.set(data),
-      error: (err: any) => console.error('Hiba a hibajelenségek betöltésekor:', err)
+      error: (any) => this.error.set('Hiba a hibajelenségek betöltésekor.')
     });
   }
 
@@ -172,10 +173,7 @@ export class WorksheetCreateComponent {
         alert('Munkalap létrehozva!');
         this.router.navigate(['/worksheet']);
       },
-      error: err => console.error('Hiba a mentés közben:', err)
+      error: () => this.error.set('Hiba a mentés közben.')
     });
   }
-
-
-
 }

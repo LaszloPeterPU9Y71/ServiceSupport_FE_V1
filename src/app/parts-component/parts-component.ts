@@ -20,6 +20,7 @@ export class PartsComponent implements OnInit {
     nettoSellingPrice: 0
   });
   editingPart = signal<SparePart | null>(null);
+  error = signal<string |null>(null);
   private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
@@ -38,7 +39,7 @@ export class PartsComponent implements OnInit {
   loadParts(): void {
     this.partService.sparePartsGet().subscribe({
       next: (data) => this.parts.set(data),
-      error: (err) => console.error('❌ Hiba a spare part-ok betöltésekor:', err)
+      error: () => this.error.set('❌ Hiba az alkatrészek betöltésekor')
     });
   }
 
@@ -91,8 +92,9 @@ export class PartsComponent implements OnInit {
           nettoSellingPrice: 0
         });
         this.loadParts();
+        this.error.set(null)
       },
-      error: (err) => console.error('❌ Hiba új part létrehozásakor:', err)
+      error: () => this.error.set('❌ Hiba új alkatrész létrehozásakor')
     });
   }
 
@@ -109,7 +111,7 @@ export class PartsComponent implements OnInit {
         this.editingPart.set(null);
         this.loadParts();
       },
-      error: (err) => console.error('❌ Hiba part szerkesztéskor:', err)
+      error: () => this.error.set('❌ Hiba alkatrész szerkesztéskor')
     });
   }
 
@@ -120,7 +122,7 @@ export class PartsComponent implements OnInit {
   deletePart(id: number): void {
     this.partService.sparePartsIdDelete(id).subscribe({
       next: () => this.loadParts(),
-      error: (err) => console.error('❌ Hiba part törlésekor:', err)
+      error: () => this.error.set('❌ Hiba alkatrész törlésekor')
     });
   }
 

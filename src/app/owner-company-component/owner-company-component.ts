@@ -22,6 +22,7 @@ export class OwnerCompanyComponent implements OnInit {
     town: ''
   });
   editingCompany = signal<OwnerCompany | null>(null);
+  error = signal<string | null>(null);
   private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
@@ -31,7 +32,7 @@ export class OwnerCompanyComponent implements OnInit {
   loadCompanies(): void {
     this.ownerCompanyService.ownerCompaniesGet().subscribe({
       next: (data) => this.companies.set(data),
-      error: (err) => console.error('❌ Hiba a cégek betöltésekor:', err)
+      error: () => this.error.set('❌ Hiba a cégek betöltésekor:')
     });
   }
 
@@ -88,7 +89,7 @@ export class OwnerCompanyComponent implements OnInit {
         });
         this.loadCompanies();
       },
-      error: (err) => console.error('❌ Hiba új cég létrehozásakor:', err)
+      error: (err) => this.error.set('❌ Hiba új cég létrehozásakor:')
     });
   }
 
@@ -105,7 +106,7 @@ export class OwnerCompanyComponent implements OnInit {
         this.editingCompany.set(null);
         this.loadCompanies();
       },
-      error: (err) => console.error('❌ Hiba cég szerkesztéskor:', err)
+      error: (err) => this.error.set('❌ Hiba cég szerkesztéskor:')
     });
   }
 
@@ -116,7 +117,7 @@ export class OwnerCompanyComponent implements OnInit {
   deleteCompany(id: number): void {
     this.ownerCompanyService.ownerCompaniesIdDelete(id).subscribe({
       next: () => this.loadCompanies(),
-      error: (err) => console.error('❌ Hiba cég törlésekor:', err)
+      error: () => this.error.set('❌ Hiba cég törlésekor:')
     });
   }
 

@@ -21,6 +21,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
     ownerCompanyName: undefined
   });
   editingEmployee = signal<OwnerCompanyEmployee | null>(null);
+  error = signal<string | null>(null);
   private _filters = signal<Record<string, string>>({});
 
   ngOnInit(): void {
@@ -30,7 +31,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
   loadEmployees(): void {
     this.employeeService.ownerCompanyEmployeesGet().subscribe({
       next: (data) => this.employees.set(data),
-      error: (err) => console.error('❌ Hiba az alkalmazottak betöltésekor:', err)
+      error: () => this.error.set('❌ Hiba az alkalmazottak betöltésekor:')
     });
   }
 
@@ -72,7 +73,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
         this.newEmployee.set({name: '', email: '', telNum: '', title: '', ownerCompanyName: undefined});
         this.loadEmployees();
       },
-      error: (err: any) => console.error('❌ Hiba új alkalmazott létrehozásakor:', err)
+      error: ( any) => this.error.set('❌ Hiba új alkalmazott létrehozásakor:')
     });
   }
 
@@ -116,7 +117,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
         this.loadEmployees();
       },
       error: (err) => {
-        console.error('❌ Hiba alkalmazott szerkesztéskor:', err);
+        this.error.set('❌ Hiba alkalmazott szerkesztéskor:');
       }
     });
   }
@@ -129,7 +130,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
   deleteEmployee(id: number): void {
     this.employeeService.ownerCompanyEmployeesIdDelete(id).subscribe({
       next: () => this.loadEmployees(),
-      error: (err) => console.error('❌ Hiba alkalmazott törlésekor:', err)
+      error: () => this.error.set('❌ Hiba alkalmazott törlésekor:')
     });
   }
 }

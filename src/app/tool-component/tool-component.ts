@@ -13,7 +13,7 @@ import {OwnerCompany, OwnerCompanyEmployee, OwnerCompanyEmployeeService, Tool, T
 export class ToolComponent implements OnInit {
   tools = signal<Tool[]>([]);
   customers = signal<OwnerCompanyEmployee[]>([]);
-
+  error = signal<string | null>(null);
   filters = signal<Partial<Record<string, string>>>({});
 
   newTool: Tool = {
@@ -56,14 +56,14 @@ export class ToolComponent implements OnInit {
   loadTools() {
     this.toolService.toolsGet().subscribe({
       next: data => this.tools.set(data),
-      error: err => console.error('Hiba történt az eszközök lekérdezésekor:', err),
+      error: () => this.error.set('Hiba történt az eszközök lekérdezésekor.'),
     });
   }
 
   loadCustomers() {
     this.ownerService.ownerCompanyEmployeesGet().subscribe({
       next: data => this.customers.set(data),
-      error: err => console.error('Hiba történt a kapcsolattartók lekérdezésekor:', err),
+      error: () => this.error.set('Hiba történt a kapcsolattartók lekérdezésekor.'),
     });
   }
 
@@ -107,7 +107,7 @@ export class ToolComponent implements OnInit {
         this.resetForm();
       },
       error: err => {
-        console.error('Hiba történt az eszköz mentésekor:', err);
+        console.error('Hiba történt az eszköz mentésekor.', err);
         this.saveError.set(true);
         this.isSaving.set(false);
       },
@@ -125,8 +125,9 @@ export class ToolComponent implements OnInit {
       next: () => {
         this.editingTool.set(null);
         this.loadTools();
+        this.saveError.set(false);
       },
-      error: (err) => console.error('❌ Hiba cég szerkesztéskor:', err)
+      error: () => this.saveError.set(true)
     });
   }
 

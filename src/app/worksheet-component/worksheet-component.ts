@@ -22,6 +22,7 @@ export class WorksheetComponent {
   private _filters = signal<Record<string, string>>({});
   statusOptions = Object.values(WorksheetStatus);
   selectedStatus = signal<WorksheetStatus | null>(null);
+  error = signal<string | null>(null);
 
   constructor() {
     this.loadWorksheets();
@@ -30,7 +31,7 @@ export class WorksheetComponent {
   loadWorksheets() {
     this.worksheetService.getWorksheetList().subscribe({
       next: (data: WorksheetListDto[]) => this.worksheets.set(data),
-      error: err => console.error('Hiba a worksheet-ek betöltésekor', err)
+      error: () => this.error.set('Hiba a munkalapok betöltésekor')
     });
   }
 

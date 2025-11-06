@@ -1,6 +1,16 @@
 <div class="container mt-4">
   <h3 class="mb-3">Javításra beadott gépek</h3>
 
+  @if (saveError()) {
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-between mt-3" role="alert">
+      <div class="me-2">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ "Hiba történt a gép mentése közben" }}
+      </div>
+      <button type="button" class="btn-close" aria-label="Bezárás" (click)="saveError.set(false)"></button>
+    </div>
+  }
+
   <div class="card mb-4 shadow-sm">
     <div class="card-header bg-dark text-white">Új eszköz felvétele</div>
 
@@ -73,9 +83,7 @@
           @if (saveSuccess()) {
             <span class="text-success">✔ Sikeresen hozzáadva</span>
           }
-          @if (saveError()) {
-            <span class="text-danger">✖ Hiba mentés közben</span>
-          }
+
         </div>
       </form>
     </div>

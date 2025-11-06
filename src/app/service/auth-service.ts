@@ -2,6 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, LoginRequest, LoginResponse } from '../api';
 import { jwtDecode } from 'jwt-decode';
+import {Observable, tap} from 'rxjs';
 
 interface DecodedToken {
   sub: string;        // username / email
@@ -59,15 +60,14 @@ export class AuthStateService {
 
 
   // ---- Login ----
-  login(username: string, password: string) {
-    const request: LoginRequest = { email: username, password };
-    this.authApi.login(request).subscribe({
-      next: (res: LoginResponse) => {
+  login(request: LoginRequest): Observable<LoginResponse> {
+    return this.authApi.login(request).pipe(
+      tap((res: LoginResponse) => {
         const token = res.token!;
         localStorage.setItem(this.TOKEN_KEY, token);
         this.isLoggedIn.set(true);
-        const decoded = jwtDecode<DecodedToken>(token);
 
+        const decoded = jwtDecode<DecodedToken>(token);
         this.roles.set(decoded.roles ?? []);
         this.username.set(decoded.fullName ?? null);
         this.userId.set(decoded.userId ?? null);
@@ -75,38 +75,22 @@ export class AuthStateService {
 
         if (this.username()) {
           localStorage.setItem(this.USERNAME_KEY, this.username()!);
-
         }
         if (this.userId()) {
           localStorage.setItem(this.USERID_KEY, this.userId()!.toString());
-
         }
-
-        if (this.userId()) {
+        if (this.position()) {
           localStorage.setItem(this.POSITION_KEY, this.position()!.toString());
-
         }
 
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.clearAuth();
-        return err;
-      }
-    });
-    return undefined;
+      })
+    );
   }
 
   // ---- Logout ----
   logout() {
     this.clearAuth();
     this.router.navigate(['/login']);
-  }
-
-  // ---- Helpers ----
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   hasRole(role: string): boolean {

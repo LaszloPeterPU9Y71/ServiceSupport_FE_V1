@@ -1,6 +1,16 @@
 <div class="container mt-4">
   <h3 class="mb-3">Javítási munkalap létrehozása</h3>
 
+  @if (error()) {
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-between mt-3" role="alert">
+      <div class="me-2">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ error() }}
+      </div>
+      <button type="button" class="btn-close" aria-label="Bezárás" (click)="error.set(null)"></button>
+    </div>
+  }
+
   <table class="table table-bordered align-middle mt-3">
     <tbody>
     <!-- Gép kiválasztás -->

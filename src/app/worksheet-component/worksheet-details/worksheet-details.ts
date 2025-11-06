@@ -33,9 +33,9 @@ class WorksheetDetailsComponent {
   defects = signal<Defect[]>([]);
   statusOptions = Object.values(WorksheetStatus);
   totalGrossNetto = signal(0);
-  totalGrossBrutto: number = 0;
   spareParts = signal<SparePart[]>([]);
   users = signal<User[]>([]);
+  error = signal<string | null>(null);
 
 
   newNote = signal<string>('');
@@ -69,14 +69,14 @@ class WorksheetDetailsComponent {
     // 🔹 hibajelenségek betöltése
     this.defectService.defectsGet().subscribe({
       next: (data: any[]) => this.defects.set(data),
-      error: (err: any) => console.error('Hiba a hibajelenségek betöltésekor:', err)
+      error: ( any) => this.error.set('Hiba a hibajelenségek betöltésekor.')
     });
 
     this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
         this.users.set(data);
       },
-      error: err => console.error('Hiba a userek betöltésekor:', err)
+      error: () => this.error.set('Hiba a userek betöltésekor.')
     });
 
     this.sparePartsService.sparePartsGet().subscribe({
@@ -84,7 +84,7 @@ class WorksheetDetailsComponent {
         this.spareParts.set(data);
         this.filteredSpareParts.set(data); // alapból minden látszik
       },
-      error: err => console.error('Hiba az alkatrészek betöltésekor:', err)
+      error: err => this.error.set('Hiba az alkatrészek betöltésekor.')
     });
 
 
@@ -245,7 +245,7 @@ class WorksheetDetailsComponent {
   save() {
     const fd = this.formData();
     if (!fd) {
-      console.error('Nincs formData betöltve!');
+      this.error.set('Nincs adatlap betöltve!');
       return;
     }
 

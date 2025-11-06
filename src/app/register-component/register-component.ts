@@ -126,7 +126,7 @@ export class RegisterComponent implements OnInit {
 
     this.userService.registerUser(newUser).subscribe({
       next: () => this.router.navigate(['/collagues']),
-      error: () => this.error.set('Regisztráció sikertelen'),
+      error: () => this.error.set('Az e-mailcím már szerepel az adatbázisban'),
     });
   }
 }
