@@ -4,10 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "api:generate": "openapi-generator-cli generate -i ./openapi.yaml -g typescript-angular -o ./src/app/api --skip-validate-spec"
+    "api:generate": "openapi-generator-cli generate -i ./openapi.yaml -g typescript-angular -o ./src/app/api --skip-validate-spec",
+
+    "docker-build": "docker build --no-cache -t delano0b/servicesupport_fe_v1:latest .",
+    "docker-push": "docker push delano0b/servicesupport_fe_v1:latest",
+    "docker-run": "docker run -d -p 4200:80 --name servicesupport_fe_v1:latest-general delano0b/servicesupport_fe_v1",
+    "docker-stop": "docker stop servicesupport_fe_v1 || true && docker rm servicesupport_fe_v1 || true",
+    "docker": "npm run build && npm run docker-build && npm run docker-push"
   },
   "prettier": {
     "printWidth": 100,
