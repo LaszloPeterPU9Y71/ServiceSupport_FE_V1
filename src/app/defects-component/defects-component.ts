@@ -85,9 +85,10 @@ export class DefectsComponent implements OnInit {
   deleteDefect(id: number): void {
     this.defectService.defectsIdDelete(id).subscribe({
       next: () => this.loadDefects(),
-      error: (err) => this.error.set('❌ Hiba hiba törlésekor:')
+      error: (err) => this.error.set('❌ A hibajelenség használatban van, törlése nem lehetséges')
     });
   }
+
   filters() {
     return this._filters();
   }
@@ -95,6 +96,7 @@ export class DefectsComponent implements OnInit {
   updateFilter(key: string, value: string) {
     this._filters.update(f => ({ ...f, [key]: value.toLowerCase() }));
   }
+
   filteredDefects() {
     const fs = this._filters();
 

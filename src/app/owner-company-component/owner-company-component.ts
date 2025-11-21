@@ -117,7 +117,7 @@ export class OwnerCompanyComponent implements OnInit {
   deleteCompany(id: number): void {
     this.ownerCompanyService.ownerCompaniesIdDelete(id).subscribe({
       next: () => this.loadCompanies(),
-      error: () => this.error.set('❌ Hiba cég törlésekor:')
+      error: () => this.error.set('❌ A cég profilja használatban van, törlése nem lehetséges!')
     });
   }
 

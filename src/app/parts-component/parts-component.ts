@@ -122,15 +122,15 @@ export class PartsComponent implements OnInit {
   deletePart(id: number): void {
     this.partService.sparePartsIdDelete(id).subscribe({
       next: () => this.loadParts(),
-      error: () => this.error.set('❌ Hiba alkatrész törlésekor')
+      error: () => this.error.set('❌ Az alkatrész használatban van, törlése nem lehetséges!')
     });
   }
 
+
   filteredParts() {
     const fs = this._filters();
-
     return this.parts()
-      // input filterek
+
       .filter(part =>
         Object.entries(fs).every(([key, val]) =>
           !val || (part as any)[key]?.toString().toLowerCase().includes(val.toLowerCase())

@@ -130,7 +130,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
   deleteEmployee(id: number): void {
     this.employeeService.ownerCompanyEmployeesIdDelete(id).subscribe({
       next: () => this.loadEmployees(),
-      error: () => this.error.set('❌ Hiba alkalmazott törlésekor:')
+      error: () => this.error.set('❌ A személy profilja használatban van, törlése nem lehetséges!')
     });
   }
 }
