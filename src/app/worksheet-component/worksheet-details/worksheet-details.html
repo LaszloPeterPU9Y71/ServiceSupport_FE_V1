@@ -67,7 +67,7 @@
                   [ngModel]="selectedDefect()"
                   (ngModelChange)="selectedDefect.set($event)">
             <option [ngValue]="undefined">Válassz hibát...</option>
-            @for (defect of defects(); track defect.id) {
+            @for (defect of defectsActive(); track defect.id) {
               <option [ngValue]="defect.id">{{ defect.name }}</option>
             }
           </select>

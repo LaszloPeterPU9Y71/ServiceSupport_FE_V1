@@ -31,6 +31,7 @@ class WorksheetDetailsComponent {
   formData = signal<any>(undefined);
   vat = 1.27;
   defects = signal<Defect[]>([]);
+  defectsActive = signal<Defect[]>([]);
   statusOptions = Object.values(WorksheetStatus);
   totalGrossNetto = signal(0);
   spareParts = signal<SparePart[]>([]);
@@ -67,6 +68,11 @@ class WorksheetDetailsComponent {
     }
 
     // 🔹 hibajelenségek betöltése
+    this.defectService.defectsActiveGet().subscribe({
+      next: (data: any[]) => this.defectsActive.set(data),
+      error: ( any) => this.error.set('Hiba a hibajelenségek betöltésekor.')
+    });
+
     this.defectService.defectsGet().subscribe({
       next: (data: any[]) => this.defects.set(data),
       error: ( any) => this.error.set('Hiba a hibajelenségek betöltésekor.')

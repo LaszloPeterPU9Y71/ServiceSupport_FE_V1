@@ -23,7 +23,7 @@ export class DefectsComponent implements OnInit {
   }
 
   loadDefects(): void {
-    this.defectService.defectsGet().subscribe({
+    this.defectService.defectsActiveGet().subscribe({
       next: (data) => this.defects.set(data),
       error: () => this.error.set('❌ Hiba a hibák betöltésekor:')
     });

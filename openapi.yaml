@@ -675,6 +675,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Defect'
+  /defects-active:
+    get:
+      tags: [ defect ]
+      summary: Get all active defects
+      responses:
+        '200':
+          description: List of active defects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Defect'
 
   /defects/{id}:
     get:
@@ -1335,6 +1348,9 @@ components:
         name:
           type: string
           example: "Bearing failure"
+        status:
+          type: boolean
+          example: "1"
     OwnerCompanyEmployee:
       type: object
       properties:

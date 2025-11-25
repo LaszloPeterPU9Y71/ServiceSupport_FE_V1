@@ -12,5 +12,6 @@
 export interface Defect { 
     id?: number;
     name?: string;
+    status?: boolean;
 }
 
