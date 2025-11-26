@@ -30,7 +30,7 @@ export class OwnerCompanyComponent implements OnInit {
   }
 
   loadCompanies(): void {
-    this.ownerCompanyService.ownerCompaniesGet().subscribe({
+    this.ownerCompanyService.ownerCompaniesActiveGet().subscribe({
       next: (data) => this.companies.set(data),
       error: () => this.error.set('❌ Hiba a cégek betöltésekor:')
     });

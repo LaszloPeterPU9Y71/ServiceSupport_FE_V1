@@ -16,5 +16,6 @@ export interface OwnerCompanyEmployee {
     telNum?: string;
     title?: string;
     ownerCompanyName?: string;
+    status?: boolean;
 }
 

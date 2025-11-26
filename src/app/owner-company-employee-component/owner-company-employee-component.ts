@@ -29,7 +29,7 @@ export class OwnerCompanyEmployeeComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.ownerCompanyEmployeesGet().subscribe({
+    this.employeeService.ownerCompanyEmployeesActiveGet().subscribe({
       next: (data) => this.employees.set(data),
       error: () => this.error.set('❌ Hiba az alkalmazottak betöltésekor:')
     });

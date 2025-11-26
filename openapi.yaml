@@ -494,6 +494,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OwnerCompany'
+  /owner-companies-active:
+    get:
+      tags:
+        - owner_company
+      summary: Get all active owner companies
+      responses:
+        '200':
+          description: List of active companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OwnerCompany'
 
   /owner-companies/{id}:
     get:
@@ -586,6 +600,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OwnerCompanyEmployee'
+  /owner-company-employees-active:
+    get:
+      tags:
+        - owner_company_employee
+      summary: Get all active employees
+      responses:
+        '200':
+          description: List of active employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OwnerCompanyEmployee'
 
   /owner-company-employees/{id}:
     get:
@@ -1397,6 +1425,9 @@ components:
           example: "Software Engineer"
         ownerCompanyName:
           type: string
+        status:
+          type: boolean
+          example: "1"
 
     OwnerCompany:
       type: object
@@ -1415,6 +1446,8 @@ components:
           type: string
         town:
           type: string
+        status:
+          type: boolean
     Company:
       type: object
       required:

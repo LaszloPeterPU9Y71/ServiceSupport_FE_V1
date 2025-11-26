@@ -17,5 +17,6 @@ export interface OwnerCompany {
     street?: string;
     taxNumber?: string;
     town?: string;
+    status?: boolean;
 }
 
