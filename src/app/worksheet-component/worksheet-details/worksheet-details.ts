@@ -35,6 +35,7 @@ class WorksheetDetailsComponent {
   statusOptions = Object.values(WorksheetStatus);
   totalGrossNetto = signal(0);
   spareParts = signal<SparePart[]>([]);
+  sparePartsActive = signal<SparePart[]>([]);
   users = signal<User[]>([]);
   error = signal<string | null>(null);
 
@@ -85,10 +86,18 @@ class WorksheetDetailsComponent {
       error: () => this.error.set('Hiba a userek betöltésekor.')
     });
 
-    this.sparePartsService.sparePartsGet().subscribe({
+/*    this.sparePartsService.sparePartsGet().subscribe({
       next: (data: SparePart[]) => {
         this.spareParts.set(data);
-        this.filteredSpareParts.set(data); // alapból minden látszik
+        this.filteredSpareParts.set(data);
+      },
+      error: err => this.error.set('Hiba az alkatrészek betöltésekor.')
+    });*/
+
+    this.sparePartsService.sparePartsActiveGet().subscribe({
+      next: (data: SparePart[]) => {
+        this.sparePartsActive.set(data);
+        this.filteredSpareParts.set(data);
       },
       error: err => this.error.set('Hiba az alkatrészek betöltésekor.')
     });
@@ -199,7 +208,7 @@ class WorksheetDetailsComponent {
 
   filterSpareParts(term: string) {
     this.searchTerm.set(term);
-    const all = this.spareParts();
+    const all = this.sparePartsActive();
     if (!term.trim()) {
       this.filteredSpareParts.set(all);
     } else {

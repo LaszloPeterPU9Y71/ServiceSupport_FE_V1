@@ -15,5 +15,6 @@ export interface SparePart {
     itemNumber?: string;
     nettoBuyingPrice?: number;
     nettoSellingPrice?: number;
+    status?: boolean;
 }
 

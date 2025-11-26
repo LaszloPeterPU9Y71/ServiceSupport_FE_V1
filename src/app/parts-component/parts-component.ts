@@ -37,7 +37,7 @@ export class PartsComponent implements OnInit {
   }
 
   loadParts(): void {
-    this.partService.sparePartsGet().subscribe({
+    this.partService.sparePartsActiveGet().subscribe({
       next: (data) => this.parts.set(data),
       error: () => this.error.set('❌ Hiba az alkatrészek betöltésekor')
     });
